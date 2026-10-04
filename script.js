@@ -1,4 +1,4 @@
-    const categories = ["All styles", "Streetwear", "Vintage", "Minimalist", "Y2K", "Summer fits", "Formal wear"];
+    const categories = ["2000s", "Outfits", "Streetwear", "90s", "Killa", "80s", "Women's", "Korean", "Vintage", "Minimalist", "Y2K", "Summer fits", "Formal wear"];
     const photos = [
       { title: "Sunday in the city", creator: "Maya Laurent", category: "Streetwear", photo: "photo-1529139574466-a303027c1d8b", avatar: "photo-1534528741775-53994a69daeb", description: "Easy layers, good denim, and nowhere in particular to be. The best outfits always leave a little room for the day to surprise you.", tags: ["relaxed denim", "city uniform", "layering"] },
       { title: "Soft structure", creator: "Studio Sora", category: "Minimalist", photo: "photo-1539109136881-3be0616acf4b", avatar: "photo-1524504388940-b1c1722653e1", description: "Clean lines with a softer point of view. A quiet palette lets the silhouette do the talking.", tags: ["minimal", "tailoring", "neutral"] },
@@ -21,29 +21,73 @@
     const grid = document.getElementById("masonry");
     const search = document.getElementById("search");
     const suggestions = document.getElementById("suggestions");
-    let activeCategory = "All styles";
+    let activeCategory = "All";
     let activePhoto = null;
+    let activePhotoIndex = -1;
     let toastTimer;
+    let authMode = "login";
+    const store = {
+      users() { try { return JSON.parse(localStorage.getItem("modeboard_users") || "[]"); } catch { return []; } },
+      saveUsers(u) { localStorage.setItem("modeboard_users", JSON.stringify(u)); },
+      session() { return JSON.parse(localStorage.getItem("modeboard_session") || "null"); },
+      saveSession(s) { s ? localStorage.setItem("modeboard_session", JSON.stringify(s)) : localStorage.removeItem("modeboard_session"); },
+      saved() { try { return JSON.parse(localStorage.getItem("modeboard_saved") || "{}"); } catch { return {}; } },
+      saveSaved(s) { localStorage.setItem("modeboard_saved", JSON.stringify(s)); }
+    };
+    const currentUser = () => store.session();
+    const hash = (s) => btoa(unescape(encodeURIComponent("salt:" + s))).slice(0, 32);
+    const catThumb = (c) => { const p = photos.find((x) => x.category.toLowerCase() === String(c).toLowerCase()) || photos[c.length % photos.length]; return imageUrl(p.photo, 120); };
 
     function renderCategories() {
-      categoryList.innerHTML = categories.map((category) => `<button class="category${category === activeCategory ? " active" : ""}" data-category="${category}" aria-pressed="${category === activeCategory}">${category}</button>`).join("");
+      categoryList.innerHTML = categories.map((category) => `<button class="category${category === activeCategory ? " active" : ""}" data-category="${category}" aria-pressed="${category === activeCategory}"><img class="cat-thumb" src="${catThumb(category)}" alt="" loading="lazy"><span class="cat-label">${category}</span></button>`).join("");
     }
 
+    function isSaved(i) { const u = currentUser(); if (!u) return false; return (store.saved()[u.email] || []).includes(i); }
+    function toggleSave(i) {
+      const u = currentUser();
+      if (!u) { openAuth("register"); showToast("Sign up to save this look"); return false; }
+      const all = store.saved(); const list = new Set(all[u.email] || []);
+      list.has(i) ? list.delete(i) : list.add(i);
+      all[u.email] = [...list]; store.saveSaved(all); renderPins(); syncDetailSave();
+      showToast(list.has(i) ? "Saved to your board" : "Removed from your board");
+      return list.has(i);
+    }
+
+    function renderAuthArea() {
+      const u = currentUser(); const box = document.getElementById("auth-area");
+      if (!u) { box.innerHTML = `<button class="btn-login" data-action="login">Log in</button><button class="btn-signup" data-action="signup">Sign up</button>`; return; }
+      const initial = (u.name || u.email || "M").trim().charAt(0).toUpperCase();
+      box.innerHTML = `<button class="avatar-btn" data-action="menu" aria-label="Account"><span class="avatar-fallback">${initial}</span><span>▾</span></button>
+      <div class="user-menu" id="user-menu" hidden><div class="user-head"><span class="avatar-fallback">${initial}</span><div><b>${u.name || "Modeboard member"}</b><small>${u.email}</small></div></div>
+      <button data-action="profile">View profile</button><button data-action="saved">Saved looks</button><button data-action="logout">Log out</button></div>`;
+    }
+
+    function inScope(photo) {
+      if (activeCategory === "All") return true;
+      const c = activeCategory.toLowerCase();
+      const hay = `${photo.title} ${photo.creator} ${photo.category} ${photo.tags.join(" ")}`.toLowerCase();
+      if (hay.includes(c)) return true;
+      if (c === "2000s" || c === "y2k") return photo.category.toLowerCase() === "y2k";
+      if (c === "90s" || c === "80s" || c === "vintage") return photo.category.toLowerCase() === "vintage";
+      if (c === "outfits" || c === "women's" || c === "korean" || c === "killa" || c === "streetwear") return ["streetwear", "y2k", "summer fits", "minimalist"].includes(photo.category.toLowerCase());
+      return photo.category.toLowerCase() === c;
+    }
     function renderPins() {
       const query = search.value.trim().toLowerCase();
-      const filtered = photos.filter((photo) => (activeCategory === "All styles" || photo.category.toLowerCase() === activeCategory.toLowerCase()) && (!query || `${photo.title} ${photo.creator} ${photo.category} ${photo.tags.join(" ")}`.toLowerCase().includes(query)));
+      const filtered = photos.filter((photo) => inScope(photo) && (!query || query === "fashion" || `${photo.title} ${photo.creator} ${photo.category} ${photo.tags.join(" ")}`.toLowerCase().includes(query)));
       grid.innerHTML = filtered.map((photo, index) => {
         const originalIndex = photos.indexOf(photo);
+        const saved = isSaved(originalIndex);
         return `<article class="pin" style="animation-delay:${Math.min(index * 35, 350)}ms">
           <div class="pin-image-wrap" data-open="${originalIndex}" tabindex="0" role="button" aria-label="View ${photo.title}">
             <img class="pin-image" src="${imageUrl(photo.photo)}" alt="${photo.title}" loading="lazy">
-            <button class="save-button" data-save="${originalIndex}">Save</button>
+            <button class="save-button${saved ? " saved" : ""}" data-save="${originalIndex}">${saved ? "Saved" : "Save"}</button>
             <div class="pin-actions"><button class="icon-button" data-like="${originalIndex}" aria-label="Like ${photo.title}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"></path></svg></button><button class="icon-button" data-more="${originalIndex}" aria-label="More options for ${photo.title}"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg></button></div>
           </div>
-          <div class="pin-caption"><img class="creator-avatar" src="${imageUrl(photo.avatar, 96)}" alt=""><div class="caption-copy"><p class="pin-title">${photo.title}</p><p class="creator">${photo.creator}</p></div></div>
+          <div class="pin-caption"><img class="creator-avatar" src="${imageUrl(photo.avatar, 96)}" alt=""><div class="caption-copy"><p class="pin-title">${photo.title}</p><p class="creator">${photo.creator}</p></div><button class="pin-more" data-more="${originalIndex}" aria-label="More options">•••</button></div>
         </article>`;
       }).join("");
-      document.getElementById("result-count").textContent = `${filtered.length} looks`;
+      const rc = document.getElementById("result-count"); if (rc) rc.remove();
       document.getElementById("empty-state").style.display = filtered.length ? "none" : "block";
       grid.style.display = filtered.length ? "block" : "none";
     }
@@ -56,8 +100,16 @@
       toastTimer = setTimeout(() => toast.classList.remove("show"), 1900);
     }
 
+    function syncDetailSave() {
+      const b = document.getElementById("detail-save");
+      const saved = activePhotoIndex >= 0 && isSaved(activePhotoIndex);
+      b.classList.toggle("saved", saved);
+      b.textContent = saved ? "Saved" : "Save";
+      b.style.cssText = saved ? "opacity:1;transform:none;background:#111;color:#fff;border-radius:999px;padding:12px 18px;font-size:14px;" : "opacity:1;transform:none;border-radius:999px;padding:12px 18px;font-size:14px;";
+    }
+
     function openDetails(index) {
-      activePhoto = photos[index];
+      activePhoto = photos[index]; activePhotoIndex = index;
       document.getElementById("detail-image").src = imageUrl(activePhoto.photo, 1100);
       document.getElementById("detail-image").alt = activePhoto.title;
       document.getElementById("detail-title").textContent = activePhoto.title;
@@ -67,13 +119,31 @@
       document.getElementById("detail-tags").innerHTML = activePhoto.tags.map((tag) => `<span class="tag">#${tag}</span>`).join("");
       const related = photos.filter((photo) => photo !== activePhoto && photo.category === activePhoto.category).slice(0, 4);
       document.getElementById("related-row").innerHTML = related.map((photo) => `<img src="${imageUrl(photo.photo, 160)}" alt="${photo.title}">`).join("");
+      syncDetailSave();
       document.getElementById("modal").classList.add("open");
       document.body.classList.add("modal-open");
       document.getElementById("close-modal").focus();
     }
 
+    function setAuthMode(mode) {
+      authMode = mode;
+      const login = mode === "login";
+      document.getElementById("tab-login").classList.toggle("on", login);
+      document.getElementById("tab-register").classList.toggle("on", !login);
+      document.getElementById("name-field").style.display = login ? "none" : "grid";
+      document.getElementById("auth-title").textContent = login ? "Welcome back" : "Welcome to Modeboard";
+      document.getElementById("auth-sub").textContent = login ? "Log in to save looks and join the community." : "Sign up to save looks, comment and build boards.";
+      document.getElementById("auth-submit").textContent = login ? "Log in" : "Sign up";
+      document.getElementById("auth-switch-text").textContent = login ? "Not on Modeboard yet?" : "Already a member?";
+      document.getElementById("auth-switch").textContent = login ? "Sign up" : "Log in";
+      document.getElementById("auth-error").hidden = true;
+    }
+    function openAuth(mode = "login") { setAuthMode(mode); document.getElementById("auth-modal").classList.add("open"); document.body.classList.add("modal-open"); setTimeout(() => document.getElementById("auth-email").focus(), 60); }
+    function closeAuth() { document.getElementById("auth-modal").classList.remove("open"); if (!document.getElementById("modal").classList.contains("open")) document.body.classList.remove("modal-open"); }
+
     renderCategories();
     renderPins();
+    renderAuthArea();
 
     categoryList.addEventListener("click", (event) => {
       const button = event.target.closest("[data-category]");
@@ -88,8 +158,8 @@
       const like = event.target.closest("[data-like]");
       const more = event.target.closest("[data-more]");
       const pin = event.target.closest("[data-open]");
-      if (save) { event.stopPropagation(); save.classList.add("saved"); save.textContent = "Saved"; showToast(`Saved to your board`); }
-      else if (like) { event.stopPropagation(); like.style.color = "var(--accent)"; showToast("Added to your likes"); }
+      if (save) { event.stopPropagation(); toggleSave(Number(save.dataset.save)); }
+      else if (like) { event.stopPropagation(); if (!currentUser()) { openAuth("register"); showToast("Sign up to like looks"); } else { like.style.color = "var(--accent)"; showToast("Added to your likes"); } }
       else if (more) { event.stopPropagation(); showToast("More options coming soon"); }
       else if (pin) openDetails(Number(pin.dataset.open));
     });
@@ -101,24 +171,17 @@
       }
     });
 
-    search.addEventListener("input", () => {
-      renderPins();
-      const value = search.value.trim();
-      suggestions.classList.toggle("open", value.length > 0);
-      if (!value) return;
-      const matching = categories.filter((category) => category.toLowerCase().includes(value.toLowerCase()) && category !== "All styles").slice(0, 3);
-      const prompts = [value, ...matching].slice(0, 4);
-      suggestions.innerHTML = `<div class="suggestion-label">Search inspiration</div>${prompts.map((item) => `<button class="suggestion" role="option" data-suggestion="${item}">⌕ &nbsp; ${item}</button>`).join("")}`;
+    search.addEventListener("input", () => { renderPins(); });
+    document.getElementById("clear-search").addEventListener("click", () => { search.value = ""; search.focus(); renderPins(); });
+    const scopeBtn = document.getElementById("scope-btn"); const scopeMenu = document.getElementById("scope-menu");
+    scopeBtn.addEventListener("click", (e) => { e.stopPropagation(); scopeMenu.hidden = !scopeMenu.hidden; });
+    scopeMenu.addEventListener("click", (e) => {
+      const b = e.target.closest("[data-scope]"); if (!b) return;
+      scopeBtn.innerHTML = `${b.dataset.scope} <span>▾</span>`;
+      scopeMenu.querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b));
+      scopeMenu.hidden = true; showToast(`Showing ${b.dataset.scope.toLowerCase()}`);
     });
-    suggestions.addEventListener("click", (event) => {
-      const option = event.target.closest("[data-suggestion]");
-      if (!option) return;
-      const match = categories.find((category) => category.toLowerCase() === option.dataset.suggestion.toLowerCase());
-      if (match) { activeCategory = match; renderCategories(); search.value = ""; }
-      suggestions.classList.remove("open");
-      renderPins();
-    });
-    document.addEventListener("click", (event) => { if (!event.target.closest(".search-wrap")) suggestions.classList.remove("open"); });
+    document.getElementById("filter-btn").addEventListener("click", (e) => { e.currentTarget.classList.toggle("on"); showToast("Filters: newest, saved and liked coming soon"); });
 
     function closeModal() {
       document.getElementById("modal").classList.remove("open");
@@ -127,20 +190,71 @@
     document.getElementById("close-modal").addEventListener("click", closeModal);
     document.getElementById("modal").addEventListener("click", (event) => { if (event.target.id === "modal") closeModal(); });
     document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeModal(); });
-    document.getElementById("detail-save").addEventListener("click", () => showToast("Saved to your board"));
-    document.getElementById("detail-like").addEventListener("click", () => showToast("Added to your likes"));
+    document.getElementById("detail-save").addEventListener("click", () => { if (activePhotoIndex >= 0) toggleSave(activePhotoIndex); });
+    document.getElementById("detail-like").addEventListener("click", () => { if (!currentUser()) { openAuth("register"); showToast("Sign up to like looks"); } else showToast("Added to your likes"); });
     document.getElementById("comment-form").addEventListener("submit", (event) => {
       event.preventDefault();
       const input = document.getElementById("comment-input");
       if (!input.value.trim()) return;
+      if (!currentUser()) { openAuth("login"); showToast("Log in to comment"); return; }
       const comment = document.createElement("span");
       comment.textContent = input.value.trim();
       document.getElementById("comment-list").append(comment);
       input.value = "";
+      showToast("Note posted");
     });
+    document.getElementById("auth-close").addEventListener("click", closeAuth);
+    document.getElementById("auth-modal").addEventListener("click", (e) => { if (e.target.id === "auth-modal") closeAuth(); });
+    document.getElementById("tab-login").addEventListener("click", () => setAuthMode("login"));
+    document.getElementById("tab-register").addEventListener("click", () => setAuthMode("register"));
+    document.getElementById("auth-switch").addEventListener("click", () => setAuthMode(authMode === "login" ? "register" : "login"));
+    document.getElementById("auth-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("auth-email").value.trim().toLowerCase();
+      const pass = document.getElementById("auth-password").value;
+      const name = document.getElementById("auth-name").value.trim();
+      const err = document.getElementById("auth-error");
+      const fail = (m) => { err.textContent = m; err.hidden = false; };
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return fail("Enter a valid email address.");
+      if (pass.length < 6) return fail("Password must be at least 6 characters.");
+      const users = store.users();
+      if (authMode === "register") {
+        if (!name) return fail("Tell us your name so friends can find you.");
+        if (users.some((u) => u.email === email)) return fail("That email already has an account. Try logging in.");
+        const user = { name, email, pass: hash(pass), created: Date.now() };
+        users.push(user); store.saveUsers(users); store.saveSession({ name, email });
+        closeAuth(); renderAuthArea(); renderPins(); showToast(`Welcome to Modeboard, ${name.split(" ")[0]}!`);
+      } else {
+        const found = users.find((u) => u.email === email);
+        if (!found || found.pass !== hash(pass)) return fail("Email or password didn't match. Try again or sign up.");
+        store.saveSession({ name: found.name, email });
+        closeAuth(); renderAuthArea(); renderPins(); showToast(`Welcome back, ${(found.name || "friend").split(" ")[0]}!`);
+      }
+      document.getElementById("auth-form").reset();
+    });
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape") { closeModal(); closeAuth(); const sm = document.getElementById("scope-menu"); if (sm) sm.hidden = true; } });
     document.body.addEventListener("click", (event) => {
-      const action = event.target.closest("[data-action]")?.dataset.action;
-      if (action === "create") showToast("Your next moodboard starts here");
-      if (action === "notifications") showToast("You’re all caught up");
-      if (action === "shop") { event.preventDefault(); showToast("Shop links are coming soon"); }
+      const el = event.target.closest("[data-action]");
+      const action = el?.dataset.action;
+      const um = document.getElementById("user-menu");
+      if (!event.target.closest(".auth-area") && um) um.hidden = true;
+      if (!event.target.closest(".search-pill")) document.getElementById("scope-menu").hidden = true;
+      if (action === "login") openAuth("login");
+      else if (action === "signup") openAuth("register");
+      else if (action === "menu") { const m = document.getElementById("user-menu"); if (m) m.hidden = !m.hidden; }
+      else if (action === "logout") { store.saveSession(null); renderAuthArea(); renderPins(); showToast("Logged out. See you soon!"); }
+      else if (action === "profile" || action === "saved") {
+        const u = currentUser();
+        if (action === "saved" && u) {
+          const ids = store.saved()[u.email] || [];
+          showToast(ids.length ? `You have ${ids.length} saved look${ids.length > 1 ? "s" : ""}` : "No saved looks yet — tap Save on anything you love");
+        } else showToast(u ? `Hi ${u.name.split(" ")[0]} — profile pages are coming soon` : "Log in to see your profile");
+      }
+      else if (action === "create") { if (!currentUser()) { openAuth("register"); showToast("Sign up to create your first board"); } else showToast("Your next moodboard starts here"); }
+      else if (action === "home" || action === "explore") { document.querySelectorAll(".side-btn").forEach((b) => b.classList.toggle("is-active", b === el)); activeCategory = "All"; search.value = "fashion"; renderCategories(); renderPins(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+      else if (action === "messages") showToast(currentUser() ? "No new messages" : "Log in to message stylists");
+      else if (action === "settings") showToast("Settings live here soon");
+      else if (action === "notifications") showToast(currentUser() ? "You're all caught up" : "Log in to see notifications");
+      else if (action === "visual-search" || action === "voice") showToast("Try typing — smart image + voice search is coming soon");
+      else if (action === "shop") { event.preventDefault(); showToast("Shop links are coming soon"); }
     });
