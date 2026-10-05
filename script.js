@@ -168,7 +168,7 @@
       const saved = activePhotoIndex >= 0 && isSaved(activePhotoIndex);
       b.classList.toggle("saved", saved);
       b.textContent = saved ? "Saved" : "Save";
-      b.style.cssText = saved ? "opacity:1;transform:none;background:#111;color:#fff;border-radius:999px;padding:12px 18px;font-size:14px;" : "opacity:1;transform:none;border-radius:999px;padding:12px 18px;font-size:14px;";
+      b.style.cssText = saved ? "opacity:1;transform:none;background:#111d13;color:#fff;border-radius:999px;padding:12px 18px;font-size:14px;" : "opacity:1;transform:none;border-radius:999px;padding:12px 18px;font-size:14px;";
     }
 
     function openDetails(index) {
