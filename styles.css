@@ -25,6 +25,7 @@
     .all-pins { display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 14px; border: 0; background: transparent; border-radius: 999px; font-weight: 600; font-size: 15px; cursor: pointer; white-space: nowrap; }
     .all-pins:hover { background: #e2e2e2; }
     .scope-menu { position: absolute; right: 10px; top: 60px; display: grid; min-width: 150px; padding: 8px; border-radius: 16px; background: #fff; box-shadow: var(--shadow); border: 1px solid var(--line); }
+    .scope-menu[hidden] { display: none !important; }
     .scope-menu button { border: 0; background: transparent; text-align: left; padding: 10px 12px; border-radius: 10px; cursor: pointer; font-weight: 600; }
     .scope-menu button:hover, .scope-menu button.on { background: #f1f1f1; }
     .auth-area { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
