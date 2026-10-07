@@ -1,40 +1,47 @@
-    :root { color-scheme: light; --ink: #111d13; --muted: #5f7461; --paper: #f7faf7; --line: #dce8de; --accent: #415d43; --accent-hover: #344a36; --pill: #eaf3ec; --hover: #dce9de; --celadon: #a1cca5; --sage: #8fb996; --fern: #709775; --shadow: 0 18px 60px rgb(17 29 19 / 18%); }
+    :root { color-scheme: light; --ink: #111d13; --muted: #5f7461; --paper: #ffffff; --line: #dce8de; --accent: #1a7a33; --accent-hover: #136128; --pill: #eef2ee; --hover: #e2e7e2; --celadon: #a1cca5; --sage: #8fb996; --fern: #709775; --shadow: 0 18px 60px rgb(17 29 19 / 18%); }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--paper); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     button, input { font: inherit; }
     button { color: inherit; }
-    .app { display: flex; min-height: 100vh; }
-    .sidebar { position: sticky; top: 0; height: 100vh; width: 72px; flex: 0 0 72px; display: flex; flex-direction: column; align-items: center; padding: 16px 0 20px; border-right: 1px solid var(--line); background: var(--paper); z-index: 6; }
-    .side-logo { margin-bottom: 18px; text-decoration: none; }
-    .brand-mark { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: white; font: 700 18px Georgia, serif; }
-    .side-nav { display: flex; flex-direction: column; gap: 8px; }
-    .side-btn { position: relative; width: 48px; height: 48px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: #5f5f5f; cursor: pointer; }
-    .side-btn:hover { background: var(--pill); color: var(--ink); }
-    .side-btn.is-active { background: var(--ink); color: #fff; }
-    .side-btn .dot { position: absolute; top: 10px; right: 11px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; }
-    .side-settings { margin-top: auto; }
+    .app { display: block; min-height: 100vh; }
     .main-col { flex: 1; min-width: 0; }
-    .topbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 14px; padding: 12px 16px 10px; background: rgb(247 250 247 / 96%); backdrop-filter: blur(8px); }
-    .search-pill { position: relative; flex: 1; display: flex; align-items: center; gap: 2px; height: 56px; padding: 0 6px 0 16px; border-radius: 999px; background: var(--pill); }
+    /* Simple Pinterest-style topbar: brand left, search center, auth right */
+    .topbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 14px; padding: 12px 20px 10px; background: rgb(255 255 255 / 96%); backdrop-filter: blur(8px); }
+    .brand { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--accent); flex: 0 0 auto; }
+    .brand-mark { width: 34px; height: 34px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: #fff; font: 700 18px Georgia, serif; }
+    .brand-word { font-weight: 800; font-size: 20px; letter-spacing: -0.02em; white-space: nowrap; color: var(--accent); }
+    .search-pill { position: relative; flex: 1 1 auto; max-width: 720px; margin: 0 auto; display: flex; align-items: center; gap: 2px; height: 48px; padding: 0 6px 0 16px; border-radius: 999px; background: var(--pill); }
+    .search-pill::before { content: "🔍"; font-size: 15px; opacity: .7; }
     .search-pill:focus-within { outline: 2px solid var(--ink); background: var(--line); }
     .search-pill .search { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; font-size: 16px; padding-left: 8px; }
     .search-pill .search::-webkit-search-cancel-button { display: none; }
     .pill-icon { width: 40px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; cursor: pointer; color: var(--ink); font-size: 15px; }
     .pill-icon:hover { background: var(--hover); }
-    .pill-divider { width: 1px; height: 28px; margin: 0 8px; background: var(--line); }
-    .all-pins { display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 14px; border: 0; background: transparent; border-radius: 999px; font-weight: 600; font-size: 15px; cursor: pointer; white-space: nowrap; }
-    .all-pins:hover { background: var(--hover); }
-    .scope-menu { position: absolute; right: 10px; top: 60px; display: grid; min-width: 150px; padding: 8px; border-radius: 16px; background: #fff; box-shadow: var(--shadow); border: 1px solid var(--line); }
-    .scope-menu[hidden] { display: none !important; }
-    .scope-menu button { border: 0; background: transparent; text-align: left; padding: 10px 12px; border-radius: 10px; cursor: pointer; font-weight: 600; }
-    .scope-menu button:hover, .scope-menu button.on { background: var(--pill); }
     .auth-area { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
-    .btn-login { height: 44px; padding: 0 18px; border-radius: 999px; border: 0; background: var(--accent); color: #fff; font-weight: 700; font-size: 15px; cursor: pointer; }
+    .btn-login { height: 44px; padding: 0 20px; border-radius: 999px; border: 0; background: var(--accent); color: #fff; font-weight: 700; font-size: 15px; cursor: pointer; }
     .btn-login:hover { background: var(--accent-hover); }
-    .btn-signup { height: 44px; padding: 0 18px; border-radius: 999px; border: 0; background: var(--pill); font-weight: 700; font-size: 15px; cursor: pointer; }
-    .btn-signup:hover { background: var(--hover); }
+    .btn-signup { height: 44px; padding: 0 20px; border-radius: 999px; border: 0; background: #eef2ee; color: var(--ink); font-weight: 700; font-size: 15px; cursor: pointer; }
+    .btn-signup:hover { background: #dfe6df; }
+    /* Guest landing hero */
+    .hero { display: flex; align-items: center; gap: 40px; max-width: 1160px; margin: 26px auto 10px; padding: 10px 24px 28px; }
     .avatar-btn { display: flex; align-items: center; gap: 4px; border: 0; background: transparent; cursor: pointer; padding: 4px; border-radius: 999px; }
     .avatar-btn:hover { background: var(--pill); }
+    /* Guest landing */
+    .hero-text { flex: 0 1 430px; }
+    .hero-text h1 { font-size: clamp(42px, 5vw, 64px); line-height: 1.02; letter-spacing: -0.03em; margin: 0 0 12px; font-weight: 800; }
+    .hero-text p { color: var(--muted); font-size: 17px; line-height: 1.5; margin: 0 0 20px; }
+    .hero-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-join { height: 48px; padding: 0 22px; border: 0; border-radius: 999px; background: var(--accent); color: #fff; font-weight: 800; cursor: pointer; }
+    .btn-join:hover { background: var(--accent-hover); }
+    .btn-have { height: 48px; padding: 0 22px; border: 0; border-radius: 999px; background: #eef2ee; color: var(--ink); font-weight: 700; cursor: pointer; }
+    .btn-have:hover { background: #dfe6df; }
+    .hero-collage { flex: 1 1 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; align-items: start; }
+    .hero-collage img { width: 100%; height: 210px; object-fit: cover; border-radius: 22px; display: block; }
+    .hero-collage img.tall { height: 300px; margin-top: 28px; }
+    .section-head { max-width: 1160px; margin: 8px auto 2px; padding: 0 24px; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .section-head h2 { font-size: 28px; margin: 0; letter-spacing: -0.02em; }
+    .section-head span { color: var(--muted); font-size: 14px; }
+    body.logged-in .hero { display: none; }
     .avatar { width: 40px; height: 40px; flex: 0 0 auto; border-radius: 50%; object-fit: cover; background: #cfe3d2; }
     .avatar-fallback { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 800; }
     .user-menu { position: absolute; right: 12px; top: 70px; z-index: 20; width: 260px; padding: 12px; border-radius: 16px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
@@ -79,6 +86,14 @@
     .pin-more:hover { background: var(--pill); }
     .empty-state { display: none; padding: 60px 20px; color: var(--muted); text-align: center; }
     .empty-state strong { display: block; margin-bottom: 8px; color: var(--ink); font-size: 22px; }
+    .empty-state span { display: block; }
+    .saved-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 8px 18px; }
+    .saved-header[hidden] { display: none !important; }
+    .saved-title-row { display: flex; align-items: center; gap: 12px; }
+    .saved-title { margin: 0; font-size: 30px; line-height: 1.1; font-weight: 800; letter-spacing: -0.02em; }
+    .saved-sub { margin: 4px 0 0; color: var(--muted); font-size: 14px; font-weight: 600; }
+    .back-btn { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: #fff; font-size: 20px; cursor: pointer; }
+    .back-btn:hover { background: var(--pill); }
     .modal-backdrop { position: fixed; inset: 0; z-index: 40; display: none; place-items: center; padding: 25px; background: rgb(0 0 0 / 55%); backdrop-filter: blur(3px); }
     .modal-backdrop.open { display: grid; animation: fade .2s ease; }
     @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
@@ -135,13 +150,11 @@
     @media (hover: none) { .pin-image-wrap::after { opacity: .12; } .pin-image-wrap .save-button, .pin-image-wrap .pin-actions { opacity: 1; transform: none; } }
     @media (max-width: 1100px) { .topbar { gap: 10px; } .masonry { columns: 4 180px; } }
     @media (max-width: 760px) {
-      .sidebar { width: 56px; flex-basis: 56px; }
-      .side-btn { width: 42px; height: 42px; }
       .topbar { gap: 8px; padding: 10px 10px 8px; }
-      .search-pill { height: 48px; }
+      .brand-word { font-size: 20px; }
+      .search-pill { height: 44px; flex: 1 1 auto; max-width: none; margin: 0; }
       .search-pill .search { font-size: 14px; }
-      .all-pins { display: none; }
-      .btn-signup { display: none; }
+      .btn-login, .btn-signup { height: 40px; padding: 0 14px; font-size: 14px; }
       .filter-row { padding: 4px 10px 10px; }
       main { padding: 4px 10px 45px; }
       .category .cat-thumb { width: 44px; height: 44px; }

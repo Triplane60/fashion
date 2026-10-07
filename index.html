@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f7faf7">
-  <title>Modeboard — Find your next look</title>
+  <title>Moodboard — Find your next look</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
@@ -12,38 +12,51 @@
 </head>
 <body>
   <div class="app">
-    <aside class="sidebar" aria-label="Primary">
-      <a class="side-logo" href="#home" aria-label="Modeboard home"><span class="brand-mark">m</span></a>
-      <nav class="side-nav">
-        <button class="side-btn is-active" data-action="home" aria-label="Home" title="Home"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1Z"/></svg></button>
-        <button class="side-btn" data-action="explore" aria-label="Explore" title="Explore"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg></button>
-        <button class="side-btn" data-action="create" aria-label="Create" title="Create"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg></button>
-        <button class="side-btn" data-action="notifications" aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="dot" id="notif-dot" hidden></span></button>
-        <button class="side-btn" data-action="messages" aria-label="Messages" title="Messages"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5Z"/></svg></button>
-      </nav>
-      <button class="side-btn side-settings" data-action="settings" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h.1a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.5h.1a1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.5 1h.2a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.5 1Z"/></svg></button>
-    </aside>
     <div class="main-col">
     <header class="topbar pinterest-bar">
+      <a class="brand" href="#home" data-action="home" aria-label="Moodboard home"><span class="brand-mark">M</span><span class="brand-word">Moodboard</span></a>
       <div class="search-pill">
-        <input id="search" class="search" type="search" value="" placeholder="Search for ideas" autocomplete="off" aria-label="Search fashion inspiration">
+        <input id="search" class="search" type="search" value="" placeholder="Search for easy outfits, streetwear, etc." autocomplete="off" aria-label="Search fashion inspiration">
         <button class="pill-icon" id="clear-search" aria-label="Clear search">✕</button>
-        <button class="pill-icon" data-action="visual-search" aria-label="Visual search" title="Search by image"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2Z"/><circle cx="12" cy="13" r="4"/></svg></button>
-        <button class="pill-icon" data-action="voice" aria-label="Voice search" title="Voice search"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 19v3"/></svg></button>
-        <span class="pill-divider"></span>
-        <button class="all-pins" id="scope-btn" aria-haspopup="listbox">All Pins <span>▾</span></button>
-        <div class="scope-menu" id="scope-menu" role="listbox" hidden><button data-scope="All Pins" class="on">All Pins</button><button data-scope="Boards">Boards</button><button data-scope="People">People</button></div>
       </div>
       <div class="auth-area" id="auth-area"></div>
     </header>
+    <section class="hero" id="guest-hero">
+      <div class="hero-text">
+        <h1>Find your next<br>look</h1>
+        <p>Save outfits, build boards and get daily fashion inspiration — all in one calm green space.</p>
+        <div class="hero-cta">
+          <button class="btn-join" data-action="signup">Join Moodboard for free</button>
+          <button class="btn-have" data-action="login">I already have an account</button>
+        </div>
+      </div>
+      <div class="hero-collage" aria-hidden="true">
+        <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=400&q=80&auto=format&fit=crop" alt="">
+        <img class="tall" src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=400&q=80&auto=format&fit=crop" alt="">
+        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&q=80&auto=format&fit=crop" alt="">
+        <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=400&q=80&auto=format&fit=crop" alt="">
+        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80&auto=format&fit=crop" alt="">
+      </div>
+    </section>
+    <div class="section-head" id="ideas-head"><h2>More fresh ideas</h2><span>Save anything you love</span></div>
     <div class="filter-row">
       <button class="filter-btn" id="filter-btn" aria-label="Filter options" title="Filters"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg></button>
       <div class="categories pills" id="categories" aria-label="Filter by fashion category"></div>
     </div>
     <div class="search-wrap" style="display:none"><div id="suggestions" class="suggestions" role="listbox"></div></div>
   <main id="home">
+    <div class="saved-header" id="saved-header" hidden>
+      <div class="saved-title-row">
+        <button class="back-btn" id="back-home" aria-label="Back to all looks">←</button>
+        <div>
+          <h2 class="saved-title">Saved looks</h2>
+          <p class="saved-sub" id="saved-count">0 saved</p>
+        </div>
+      </div>
+      <button class="btn-signup" id="exit-saved">Explore more</button>
+    </div>
     <section class="masonry" id="masonry" aria-label="Fashion inspiration"></section>
-    <div class="empty-state" id="empty-state"><strong>No looks found just yet.</strong>Try another search or category.</div>
+    <div class="empty-state" id="empty-state"><strong>No looks found just yet.</strong><span id="empty-text">Try another search or category.</span></div>
   </main>
     </div><!-- /main-col -->
   </div><!-- /app -->
@@ -65,8 +78,8 @@
   <div class="modal-backdrop" id="auth-modal" role="dialog" aria-modal="true" aria-label="Log in or sign up">
     <article class="auth-modal">
       <button class="close-modal auth-close" id="auth-close" aria-label="Close">&times;</button>
-      <div class="auth-logo"><span class="brand-mark">m</span></div>
-      <h2 id="auth-title">Welcome to Modeboard</h2>
+      <div class="auth-logo"><span class="brand-mark">M</span></div>
+      <h2 id="auth-title">Welcome to Moodboard</h2>
       <p class="auth-sub" id="auth-sub">Find ideas for your next look.</p>
       <div class="auth-tabs" role="tablist"><button id="tab-login" class="on" role="tab">Log in</button><button id="tab-register" role="tab">Sign up</button></div>
       <form id="auth-form" novalidate>
@@ -76,7 +89,7 @@
         <p class="auth-error" id="auth-error" hidden></p>
         <button type="submit" class="auth-submit" id="auth-submit">Log in</button>
       </form>
-      <p class="auth-switch"><span id="auth-switch-text">Not on Modeboard yet?</span> <button id="auth-switch">Sign up</button></p>
+      <p class="auth-switch"><span id="auth-switch-text">Not on Moodboard yet?</span> <button id="auth-switch">Sign up</button></p>
       <p class="auth-terms">By continuing you agree to the Terms. Demo accounts are stored only in this browser.</p>
     </article>
   </div>

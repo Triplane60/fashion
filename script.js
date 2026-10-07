@@ -85,6 +85,7 @@
     const search = document.getElementById("search");
     const suggestions = document.getElementById("suggestions");
     let activeCategory = "All";
+    let activeView = "home";
     let activePhoto = null;
     let activePhotoIndex = -1;
     let toastTimer;
@@ -116,12 +117,30 @@
       return list.has(i);
     }
 
+    function getSavedIds() { const u = currentUser(); if (!u) return []; return store.saved()[u.email] || []; }
+
+    function showSaved() {
+      const u = currentUser();
+      if (!u) { openAuth("login"); showToast("Log in to see your saved looks"); return; }
+      activeView = "saved";
+      document.getElementById("user-menu").hidden = true;
+      renderPins();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function goHome() {
+      activeView = "home";
+      activeCategory = "All"; search.value = "";
+      renderCategories(); renderPins();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     function renderAuthArea() {
       const u = currentUser(); const box = document.getElementById("auth-area");
+      document.body.classList.toggle("logged-in", !!u);
       if (!u) { box.innerHTML = `<button class="btn-login" data-action="login">Log in</button><button class="btn-signup" data-action="signup">Sign up</button>`; return; }
       const initial = (u.name || u.email || "M").trim().charAt(0).toUpperCase();
       box.innerHTML = `<button class="avatar-btn" data-action="menu" aria-label="Account"><span class="avatar-fallback">${initial}</span><span>▾</span></button>
-      <div class="user-menu" id="user-menu" hidden><div class="user-head"><span class="avatar-fallback">${initial}</span><div><b>${u.name || "Modeboard member"}</b><small>${u.email}</small></div></div>
+      <div class="user-menu" id="user-menu" hidden><div class="user-head"><span class="avatar-fallback">${initial}</span><div><b>${u.name || "Moodboard member"}</b><small>${u.email}</small></div></div>
       <button data-action="profile">View profile</button><button data-action="saved">Saved looks</button><button data-action="logout">Log out</button></div>`;
     }
 
@@ -137,9 +156,26 @@
     }
     function renderPins() {
       const query = search.value.trim().toLowerCase();
-      const filtered = photos.filter((photo) => inScope(photo) && (!query || query === "fashion" || `${photo.title} ${photo.creator} ${photo.category} ${photo.tags.join(" ")}`.toLowerCase().includes(query)));
-      grid.innerHTML = filtered.map((photo, index) => {
-        const originalIndex = photos.indexOf(photo);
+      const savedIds = new Set(getSavedIds());
+      const inSavedView = activeView === "saved";
+      document.getElementById("saved-header").hidden = !inSavedView;
+      document.querySelector(".filter-row").style.display = inSavedView ? "none" : "";
+      let list = photos.map((photo, idx) => ({ photo, idx }));
+      if (inSavedView) list = list.filter(({ idx }) => savedIds.has(idx));
+      else list = list.filter(({ photo }) => inScope(photo));
+      const filtered = list.filter(({ photo }) => (!query || query === "fashion" || `${photo.title} ${photo.creator} ${photo.category} ${photo.tags.join(" ")}`.toLowerCase().includes(query)));
+      const countEl = document.getElementById("saved-count");
+      if (countEl) countEl.textContent = `${savedIds.size} saved look${savedIds.size === 1 ? "" : "s"}`;
+      const emptyTitle = document.querySelector("#empty-state strong");
+      const emptyText = document.getElementById("empty-text");
+      if (inSavedView) {
+        if (emptyTitle) emptyTitle.textContent = query ? "No saved looks match that search." : "No saved looks yet.";
+        if (emptyText) emptyText.textContent = query ? "Try a different search, or explore more looks to save." : "Tap Save on anything you love and it will live here.";
+      } else {
+        if (emptyTitle) emptyTitle.textContent = "No looks found just yet.";
+        if (emptyText) emptyText.textContent = "Try another search or category.";
+      }
+      grid.innerHTML = filtered.map(({ photo, idx: originalIndex }, index) => {
         const saved = isSaved(originalIndex);
         return `<article class="pin" style="animation-delay:${Math.min(index * 35, 350)}ms">
           <div class="pin-image-wrap" data-open="${originalIndex}" tabindex="0" role="button" aria-label="View ${photo.title}">
@@ -194,10 +230,10 @@
       document.getElementById("tab-login").classList.toggle("on", login);
       document.getElementById("tab-register").classList.toggle("on", !login);
       document.getElementById("name-field").style.display = login ? "none" : "grid";
-      document.getElementById("auth-title").textContent = login ? "Welcome back" : "Welcome to Modeboard";
+      document.getElementById("auth-title").textContent = login ? "Welcome back" : "Welcome to Moodboard";
       document.getElementById("auth-sub").textContent = login ? "Log in to save looks and join the community." : "Sign up to save looks, comment and build boards.";
       document.getElementById("auth-submit").textContent = login ? "Log in" : "Sign up";
-      document.getElementById("auth-switch-text").textContent = login ? "Not on Modeboard yet?" : "Already a member?";
+      document.getElementById("auth-switch-text").textContent = login ? "Not on Moodboard yet?" : "Already a member?";
       document.getElementById("auth-switch").textContent = login ? "Sign up" : "Log in";
       document.getElementById("auth-error").hidden = true;
     }
@@ -211,10 +247,14 @@
     categoryList.addEventListener("click", (event) => {
       const button = event.target.closest("[data-category]");
       if (!button) return;
+      activeView = "home";
       activeCategory = button.dataset.category;
       renderCategories();
       renderPins();
     });
+
+    document.getElementById("back-home").addEventListener("click", goHome);
+    document.getElementById("exit-saved").addEventListener("click", goHome);
 
     grid.addEventListener("click", (event) => {
       const save = event.target.closest("[data-save]");
@@ -236,14 +276,6 @@
 
     search.addEventListener("input", () => { renderPins(); });
     document.getElementById("clear-search").addEventListener("click", () => { search.value = ""; search.focus(); renderPins(); });
-    const scopeBtn = document.getElementById("scope-btn"); const scopeMenu = document.getElementById("scope-menu");
-    scopeBtn.addEventListener("click", (e) => { e.stopPropagation(); scopeMenu.hidden = !scopeMenu.hidden; });
-    scopeMenu.addEventListener("click", (e) => {
-      const b = e.target.closest("[data-scope]"); if (!b) return;
-      scopeBtn.innerHTML = `${b.dataset.scope} <span>▾</span>`;
-      scopeMenu.querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b));
-      scopeMenu.hidden = true; showToast(`Showing ${b.dataset.scope.toLowerCase()}`);
-    });
     document.getElementById("filter-btn").addEventListener("click", (e) => { e.currentTarget.classList.toggle("on"); showToast("Filters: newest, saved and liked coming soon"); });
 
     function closeModal() {
@@ -286,7 +318,7 @@
         if (users.some((u) => u.email === email)) return fail("That email already has an account. Try logging in.");
         const user = { name, email, pass: hash(pass), created: Date.now() };
         users.push(user); store.saveUsers(users); store.saveSession({ name, email });
-        closeAuth(); renderAuthArea(); renderPins(); showToast(`Welcome to Modeboard, ${name.split(" ")[0]}!`);
+        closeAuth(); renderAuthArea(); renderPins(); showToast(`Welcome to Moodboard, ${name.split(" ")[0]}!`);
       } else {
         const found = users.find((u) => u.email === email);
         if (!found || found.pass !== hash(pass)) return fail("Email or password didn't match. Try again or sign up.");
@@ -295,29 +327,24 @@
       }
       document.getElementById("auth-form").reset();
     });
-    document.addEventListener("keydown", (event) => { if (event.key === "Escape") { closeModal(); closeAuth(); const sm = document.getElementById("scope-menu"); if (sm) sm.hidden = true; } });
+    document.addEventListener("keydown", (event) => { if (event.key === "Escape") { closeModal(); closeAuth(); } });
     document.body.addEventListener("click", (event) => {
       const el = event.target.closest("[data-action]");
       const action = el?.dataset.action;
       const um = document.getElementById("user-menu");
       if (!event.target.closest(".auth-area") && um) um.hidden = true;
-      if (!event.target.closest(".search-pill")) document.getElementById("scope-menu").hidden = true;
       if (action === "login") openAuth("login");
       else if (action === "signup") openAuth("register");
       else if (action === "menu") { const m = document.getElementById("user-menu"); if (m) m.hidden = !m.hidden; }
-      else if (action === "logout") { store.saveSession(null); renderAuthArea(); renderPins(); showToast("Logged out. See you soon!"); }
+      else if (action === "logout") { activeView = "home"; activeCategory = "All"; const sv = document.getElementById("search"); if (sv) sv.value = ""; store.saveSession(null); renderAuthArea(); renderCategories(); renderPins(); showToast("Logged out. See you soon!"); }
       else if (action === "profile" || action === "saved") {
         const u = currentUser();
-        if (action === "saved" && u) {
-          const ids = store.saved()[u.email] || [];
-          showToast(ids.length ? `You have ${ids.length} saved look${ids.length > 1 ? "s" : ""}` : "No saved looks yet — tap Save on anything you love");
-        } else showToast(u ? `Hi ${u.name.split(" ")[0]} — profile pages are coming soon` : "Log in to see your profile");
+        if (action === "saved") showSaved();
+        else showToast(u ? `Hi ${u.name.split(" ")[0]} — profile pages are coming soon` : "Log in to see your profile");
       }
       else if (action === "create") { if (!currentUser()) { openAuth("register"); showToast("Sign up to create your first board"); } else showToast("Your next moodboard starts here"); }
-      else if (action === "home" || action === "explore") { document.querySelectorAll(".side-btn").forEach((b) => b.classList.toggle("is-active", b === el)); activeCategory = "All"; search.value = ""; renderCategories(); renderPins(); window.scrollTo({ top: 0, behavior: "smooth" }); }
-      else if (action === "messages") showToast(currentUser() ? "No new messages" : "Log in to message stylists");
+      else if (action === "home") { activeView = "home"; activeCategory = "All"; search.value = ""; renderCategories(); renderPins(); window.scrollTo({ top: 0, behavior: "smooth" }); }
       else if (action === "settings") showToast("Settings live here soon");
-      else if (action === "notifications") showToast(currentUser() ? "You're all caught up" : "Log in to see notifications");
       else if (action === "visual-search" || action === "voice") showToast("Try typing — smart image + voice search is coming soon");
       else if (action === "shop") { event.preventDefault(); showToast("Shop links are coming soon"); }
     });
