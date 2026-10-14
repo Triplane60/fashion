@@ -1,85 +1,84 @@
     const categories = ["2000s", "Outfits", "Streetwear", "90s", "Killa", "80s", "Women's", "Korean", "Vintage", "Minimalist", "Y2K", "Summer fits", "Formal wear"];
     const photos = [
-      { title: "Sunday in the city", creator: "Maya Laurent", category: "Streetwear", photo: "photo-1529139574466-a303027c1d8b", avatar: "photo-1534528741775-53994a69daeb", description: "Easy layers, good denim, and nowhere in particular to be. The best outfits always leave a little room for the day to surprise you.", tags: ["relaxed denim", "city uniform", "layering"] },
-      { title: "Soft structure", creator: "Studio Sora", category: "Minimalist", photo: "photo-1539109136881-3be0616acf4b", avatar: "photo-1524504388940-b1c1722653e1", description: "Clean lines with a softer point of view. A quiet palette lets the silhouette do the talking.", tags: ["minimal", "tailoring", "neutral"] },
-      { title: "A little bit retro", creator: "Inez Ward", category: "Vintage", photo: "photo-1525507119028-ed4c629a60a3", avatar: "photo-1531123897727-8f129e1688ce", description: "Found-feeling pieces and a lived-in palette make this one feel collected, not constructed.", tags: ["vintage", "secondhand", "90s"] },
-      { title: "Heatwave uniform", creator: "Lola James", category: "Summer fits", photo: "photo-1515886657613-9f3515b0c78f", avatar: "photo-1529139574466-a303027c1d8b", description: "The kind of outfit that belongs to a long, bright afternoon. Simple pieces, worn your own way.", tags: ["summer", "linen", "weekend"] },
-      { title: "Off-duty, on point", creator: "Kai Morgan", category: "Streetwear", photo: "photo-1523398002811-999ca8dec234", avatar: "photo-1500648767791-00dcc994a43e", description: "An oversized layer and a sharp accessory make an everyday fit feel considered.", tags: ["street style", "oversized", "everyday"] },
-      { title: "After dark", creator: "Nadia Vale", category: "Formal wear", photo: "photo-1539008835657-9e8e9680c956", avatar: "photo-1544005313-94ddf0286df2", description: "A little drama, a lot of confidence. Modern evening dressing with nothing extra to prove.", tags: ["evening", "occasion", "statement"] },
-      { title: "Y2K, revisited", creator: "Zoe Park", category: "Y2K", photo: "photo-1483985988355-763728e1935b", avatar: "photo-1534528741775-53994a69daeb", description: "Nostalgia without the costume. A playful nod to the era, styled for right now.", tags: ["y2k", "playful", "going out"] },
-      { title: "Quiet weekend", creator: "Elise Nør", category: "Minimalist", photo: "photo-1485230895905-ec40ba36b9bc", avatar: "photo-1524504388940-b1c1722653e1", description: "A thoughtful edit of everyday essentials in tactile fabrics and easy proportions.", tags: ["capsule", "everyday", "soft tailoring"] },
-      { title: "The good jacket", creator: "Theo Wells", category: "Vintage", photo: "photo-1551232864-3f0890e580d9", avatar: "photo-1500648767791-00dcc994a43e", description: "One forever layer, worn until it feels like yours. Start with the jacket and build slowly.", tags: ["vintage find", "outerwear", "classic"] },
-      { title: "Sunday market stroll", creator: "June Atelier", category: "Summer fits", photo: "photo-1509631179647-0177331693ae", avatar: "photo-1531123897727-8f129e1688ce", description: "Lightweight, lived-in and ready for an unplanned detour. This is summer at its easiest.", tags: ["market day", "summer", "easy layers"] },
-      { title: "New romantics", creator: "Mina Ellis", category: "Formal wear", photo: "photo-1524504388940-b1c1722653e1", avatar: "photo-1544005313-94ddf0286df2", description: "A softer take on occasion dressing, with delicate details against a grounded silhouette.", tags: ["occasion", "romantic", "modern classic"] },
-      { title: "Color outside", creator: "Rae Kim", category: "Y2K", photo: "photo-1496747611176-843222e1e57c", avatar: "photo-1534528741775-53994a69daeb", description: "A fearless color story balanced by familiar, wearable shapes. Start with one piece you love.", tags: ["color", "y2k", "street style"] },
-      { title: "Borrowed from him", creator: "Alex Rios", category: "Streetwear", photo: "photo-1503342217505-b0a15ec3261c", avatar: "photo-1500648767791-00dcc994a43e", description: "Loose, borrowed proportions with a few intentional details to bring the whole thing together.", tags: ["androgynous", "oversized", "streetwear"] },
-      { title: "Sunday best, undone", creator: "Sofia Lane", category: "Vintage", photo: "photo-1490481651871-ab68de25d43d", avatar: "photo-1544005313-94ddf0286df2", description: "Classic pieces feel more personal when you let them be a little imperfect.", tags: ["vintage", "classic", "personal style"] },
-      { title: "The linen hour", creator: "Maya Laurent", category: "Summer fits", photo: "photo-1543076447-215ad9ba6923", avatar: "photo-1534528741775-53994a69daeb", description: "Linen, sun, and the freedom to keep the rest simple. An easy outfit worth repeating.", tags: ["linen", "summer", "slow mornings"] },
-      { title: "Golden hour muse", creator: "Ava Chen", category: "Summer fits", photo: "photo-1469334031218-e382a71b716b", avatar: "photo-1534528741775-53994a69daeb", description: "Sunglasses on, worries off. Sun-washed color that works from boardwalk to rooftop.", tags: ["summer", "golden hour", "muse"] },
-      { title: "Denim days", creator: "Jonah Reed", category: "90s", photo: "photo-1542272604-787c3835535d", avatar: "photo-1500648767791-00dcc994a43e", description: "Head-to-toe denim, worn in all the right places. A 90s uniform that still hits.", tags: ["denim", "90s", "casual"] },
-      { title: "Rack edit", creator: "Studio Nord", category: "Minimalist", photo: "photo-1445205170230-053b83016050", avatar: "photo-1544005313-94ddf0286df2", description: "A tight rack of neutrals and washed denim. Fewer, better pieces on repeat.", tags: ["rack", "capsule", "neutral"] },
-      { title: "Store run", creator: "Remy Cole", category: "Streetwear", photo: "photo-1441986300917-64674bd600d8", avatar: "photo-1506794778202-cad84cf45f1d", description: "Workwear jackets, cargos and sneakers. Streetwear staples stacked wall to wall.", tags: ["store", "streetwear", "essentials"] },
-      { title: "Street muse", creator: "Lena Park", category: "Korean", photo: "photo-1495385794356-15371f348c31", avatar: "photo-1531123897727-8f129e1688ce", description: "Seoul street style: clean sneakers, pleated skirt and an easy oversized blazer.", tags: ["korean", "street style", "preppy"] },
-      { title: "Soft glam", creator: "Nina Rose", category: "Women's", photo: "photo-1487412720507-e7ab37603c6f", avatar: "photo-1494790108377-be9c29b29330", description: "Glowy skin, brushed brows and a slick pony. Beauty that lets the outfit breathe.", tags: ["beauty", "glam", "soft"] },
-      { title: "White tee ritual", creator: "Sam Baker", category: "Outfits", photo: "photo-1521572163474-6864f9cf17ab", avatar: "photo-1500648767791-00dcc994a43e", description: "The perfect white tee, jeans and nothing to prove. The everyday outfit formula.", tags: ["basics", "white tee", "outfits"] },
-      { title: "Portrait in style", creator: "Noah Kim", category: "Outfits", photo: "photo-1552374196-c4e7ffc6e126", avatar: "photo-1506794778202-cad84cf45f1d", description: "Sharp tailoring, soft attitude. Menswear that balances classic and casual.", tags: ["menswear", "portrait", "tailoring"] },
-      { title: "Field jacket season", creator: "Alex Ford", category: "Vintage", photo: "photo-1591047139829-d91aecb6caea", avatar: "photo-1500648767791-00dcc994a43e", description: "A rugged field jacket over washed denim. Vintage workwear that ages well.", tags: ["jacket", "vintage", "menswear"] },
-      { title: "Denim on denim", creator: "Chloe Kim", category: "Korean", photo: "photo-1594633312681-425c7b97ccd1", avatar: "photo-1534528741775-53994a69daeb", description: "Double denim with a cropped jacket. K-style casual with clean sneakers.", tags: ["denim", "korean", "casual"] },
-      { title: "Editorial beige", creator: "Ivy Studio", category: "Women's", photo: "photo-1581044777550-4cfa60707c03", avatar: "photo-1544005313-94ddf0286df2", description: "Beige trench, gold hoops, slick bun. Quiet luxury for running the city.", tags: ["editorial", "beige", "trench"] },
-      { title: "Linen and light", creator: "Ella Moss", category: "Summer fits", photo: "photo-1572804013309-59a88b7e92f1", avatar: "photo-1524504388940-b1c1722653e1", description: "Barefoot in linen on a bright day. Summer dressing at its softest.", tags: ["linen", "summer", "dress"] },
-      { title: "Night out set", creator: "Zoe Park", category: "Y2K", photo: "photo-1574015974293-817f0ebebb74", avatar: "photo-1534528741775-53994a69daeb", description: "Wind-tossed hair and a black top. The night, captured in monochrome.", tags: ["y2k", "night out", "denim"] },
-      { title: "Cozy layers", creator: "Elise Nor", category: "Minimalist", photo: "photo-1434389677669-e08b4cac3105", avatar: "photo-1524504388940-b1c1722653e1", description: "Knit on knit, in soft grays. A cozy capsule you will live in all week.", tags: ["knit", "cozy", "capsule"] },
-      { title: "Air Max era", creator: "Kai Morgan", category: "2000s", photo: "photo-1600185365483-26d7a4cc7519", avatar: "photo-1500648767791-00dcc994a43e", description: "Chunky runners and a low stance. The 2000s sneaker that never really left.", tags: ["2000s", "sneakers", "air max"] },
-      { title: "Wheat-season runners", creator: "Theo Wells", category: "2000s", photo: "photo-1549298916-b41d501d3772", avatar: "photo-1506794778202-cad84cf45f1d", description: "Tonal suede high-tops on golden fabric. Basketball energy, street polish.", tags: ["2000s", "sneakers", "suede"] },
-      { title: "Low-rise rules", creator: "Rae Kim", category: "2000s", photo: "photo-1541099649105-f69ad21f3246", avatar: "photo-1534528741775-53994a69daeb", description: "Distressed denim and a carefree pose. The 2000s silhouette, worn loud.", tags: ["2000s", "denim", "low rise"] },
-      { title: "Bomber season", creator: "Alex Rios", category: "2000s", photo: "photo-1548126032-079a0fb0099d", avatar: "photo-1500648767791-00dcc994a43e", description: "Red hoodie under a flight bomber and dark shades. Subtlety was optional.", tags: ["2000s", "bomber", "street"] },
-      { title: "Primary colors", creator: "Studio Nord", category: "2000s", photo: "photo-1489987707025-afc232f7ea0f", avatar: "photo-1544005313-94ddf0286df2", description: "Reds, yellows and blues racked to the ceiling. Maximal wardrobes, zero restraint.", tags: ["2000s", "color", "rack"] },
-      { title: "The denim wall", creator: "Remy Cole", category: "2000s", photo: "photo-1560243563-062bfc001d68", avatar: "photo-1506794778202-cad84cf45f1d", description: "Every wash from pale to raw, stacked floor to ceiling. Denim shopping as a sport.", tags: ["2000s", "denim", "shopping"] },
-      { title: "Main character", creator: "Kai Morgan", category: "Killa", photo: "photo-1487222477894-8943e31ef7b2", avatar: "photo-1500648767791-00dcc994a43e", description: "Cognac leather, black shades and all the confidence in the room.", tags: ["killa", "leather", "statement"] },
-      { title: "Sequin sisters", creator: "Zoe Park", category: "Killa", photo: "photo-1550614000-4895a10e1bfd", avatar: "photo-1534528741775-53994a69daeb", description: "Matching red sequins for the night that needed remembering.", tags: ["killa", "sequin", "night out"] },
-      { title: "Hood up", creator: "Lena Park", category: "Killa", photo: "photo-1508216310976-c518daae0cdc", avatar: "photo-1531123897727-8f129e1688ce", description: "Grey hoodie, hard striped lines, zero apologies.", tags: ["killa", "hoodie", "street"] },
-      { title: "Peace out", creator: "Alex Rios", category: "Killa", photo: "photo-1503341504253-dff4815485f1", avatar: "photo-1500648767791-00dcc994a43e", description: "Black tee, graphic front, instant attitude.", tags: ["killa", "graphic tee", "street"] },
-      { title: "Crosswalk energy", creator: "Lena Park", category: "Killa", photo: "photo-1578632292335-df3abbb0d586", avatar: "photo-1531123897727-8f129e1688ce", description: "Printed coat, rust trousers and red shoes mid-stride. The street is the runway.", tags: ["killa", "street style", "outerwear"] },
-      { title: "Back graphic", creator: "Remy Cole", category: "Killa", photo: "photo-1564859228273-274232fdb516", avatar: "photo-1506794778202-cad84cf45f1d", description: "The print says it best from behind. Cap on, headphones in.", tags: ["killa", "graphic tee", "summer"] },
-      { title: "Power blouse", creator: "Inez Ward", category: "80s", photo: "photo-1583846783214-7229a91b20ed", avatar: "photo-1531123897727-8f129e1688ce", description: "White ruffles, high-waist buttons and oversized shades. Boardroom boss energy.", tags: ["80s", "blouse", "power dressing"] },
-      { title: "Bow at work", creator: "Sofia Lane", category: "80s", photo: "photo-1608234807905-4466023792f5", avatar: "photo-1544005313-94ddf0286df2", description: "A black bow over white poplin. Prep school meets the corner office.", tags: ["80s", "preppy", "shirt"] },
-      { title: "Berry full skirt", creator: "Ella Moss", category: "80s", photo: "photo-1585487000160-6ebcfceb0d03", avatar: "photo-1544005313-94ddf0286df2", description: "Deep berry buttons and a skirt with volume. Ladylike, with shoulders back.", tags: ["80s", "midi", "color"] },
-      { title: "Gingham fields", creator: "Lola James", category: "80s", photo: "photo-1502716119720-b23a93e5fe1b", avatar: "photo-1534528741775-53994a69daeb", description: "Red gingham catching wind in tall grass. Picnic glamour, amplified.", tags: ["80s", "gingham", "summer"] },
-      { title: "Plum hour", creator: "Nadia Vale", category: "80s", photo: "photo-1551803091-e20673f15770", avatar: "photo-1494790108377-be9c29b29330", description: "Plum lace with strategic cut-outs. Evening dressing with nerve.", tags: ["80s", "lace", "evening"] },
-      { title: "Red sweep", creator: "Mina Ellis", category: "80s", photo: "photo-1595777457583-95e059d581b8", avatar: "photo-1544005313-94ddf0286df2", description: "A crimson skirt moving like water. Drama, cut on the bias.", tags: ["80s", "gown", "statement"] },
-      { title: "Hood under denim", creator: "Lena Park", category: "90s", photo: "photo-1517841905240-472988babdf9", avatar: "photo-1531123897727-8f129e1688ce", description: "Grey hoodie under light-wash denim, blue wall optional. Recess never ended.", tags: ["90s", "denim", "layering"] },
-      { title: "Chambray classic", creator: "Jonah Reed", category: "90s", photo: "photo-1596755094514-f87e34085b2c", avatar: "photo-1500648767791-00dcc994a43e", description: "One soft chambray shirt on a wooden hanger. Wardrobe staple, no notes.", tags: ["90s", "chambray", "essentials"] },
-      { title: "Trucker jacket", creator: "Theo Wells", category: "90s", photo: "photo-1611312449408-fcece27cdbb7", avatar: "photo-1506794778202-cad84cf45f1d", description: "Cord-collar denim against black. The 90s trucker, still undefeated.", tags: ["90s", "denim", "jacket"] },
-      { title: "Canadian tux", creator: "Noah Kim", category: "90s", photo: "photo-1516257984-b1b4d707412e", avatar: "photo-1506794778202-cad84cf45f1d", description: "Denim jacket over denim, hand in pocket. When in doubt, double it up.", tags: ["90s", "denim", "menswear"] },
-      { title: "Flannel hours", creator: "Jonah Reed", category: "90s", photo: "photo-1530268729831-4b0b9e170218", avatar: "photo-1500648767791-00dcc994a43e", description: "Plaid flannel and thick frames over coffee. Grunge grew up politely.", tags: ["90s", "flannel", "grunge"] },
-      { title: "Midnight suit", creator: "Noah Kim", category: "Formal wear", photo: "photo-1519085360753-af0119f7cbe7", avatar: "photo-1506794778202-cad84cf45f1d", description: "All-black tailoring with a slim tie. Quiet formality, done right.", tags: ["formal", "suit", "evening"] },
-      { title: "Stripe play", creator: "Marcus Hale", category: "Formal wear", photo: "photo-1507679799987-c73779587ccf", avatar: "photo-1500648767791-00dcc994a43e", description: "Navy worsted, striped tie, adjusting the cuff. Boardroom ready.", tags: ["formal", "suit", "menswear"] },
-      { title: "Orchid gown", creator: "Mina Ellis", category: "Formal wear", photo: "photo-1566174053879-31528523f8ae", avatar: "photo-1494790108377-be9c29b29330", description: "Off-shoulder plum satin on a violet backdrop. Red-carpet posture.", tags: ["formal", "gown", "occasion"] },
-      { title: "Windowpane check", creator: "Theo Wells", category: "Formal wear", photo: "photo-1594938298603-c8148c4dae35", avatar: "photo-1506794778202-cad84cf45f1d", description: "A blue plaid three-piece, hands on the lapels. Old-school tailoring, modern fit.", tags: ["formal", "suit", "tailoring"] },
-      { title: "Flatlay Friday", creator: "Sam Baker", category: "Outfits", photo: "photo-1479064555552-3ef4979f8908", avatar: "photo-1500648767791-00dcc994a43e", description: "Boots, belt and grey trousers laid flat. The outfit before the outfit.", tags: ["outfits", "flatlay", "menswear"] },
-      { title: "Wardrobe reset", creator: "Elise Nør", category: "Outfits", photo: "photo-1556905055-8f358a7a47b2", avatar: "photo-1524504388940-b1c1722653e1", description: "Knit, denim and tulips on white linen. A soft start to the week.", tags: ["outfits", "flatlay", "neutral"] },
-      { title: "Desk-side denim", creator: "Ivy Studio", category: "Outfits", photo: "photo-1598554747436-c9293d6a588f", avatar: "photo-1544005313-94ddf0286df2", description: "White rib tank, light jeans and heels. The lunch-break outfit formula.", tags: ["outfits", "denim", "basics"] },
-      { title: "Cold-day formula", creator: "June Atelier", category: "Outfits", photo: "photo-1516762689617-e1cffcef479d", avatar: "photo-1531123897727-8f129e1688ce", description: "Cream knit, blue jeans and suede booties, folded and ready.", tags: ["outfits", "flatlay", "knit"] },
-      { title: "Double vision", creator: "Ivy Studio", category: "Women's", photo: "photo-1553544260-f87e671974ee", avatar: "photo-1544005313-94ddf0286df2", description: "Tonal layers on repeat, photographed from above. Dress like a duo.", tags: ["women's", "editorial", "tonal"] },
-      { title: "Rose garden", creator: "Ella Moss", category: "Women's", photo: "photo-1481824429379-07aa5e5b0739", avatar: "photo-1494790108377-be9c29b29330", description: "A red wrap top among the blooms. Romance, worn casually.", tags: ["women's", "floral", "day"] },
-      { title: "Terracotta glow", creator: "Nina Rose", category: "Women's", photo: "photo-1546877625-cb8c71916608", avatar: "photo-1494790108377-be9c29b29330", description: "Burnt-orange knit and loose waves. Warm tones for cooler days.", tags: ["women's", "color", "portrait"] },
-      { title: "Grey drape", creator: "Studio Sora", category: "Women's", photo: "photo-1601762603339-fd61e28b698a", avatar: "photo-1524504388940-b1c1722653e1", description: "One sculptural shoulder in dove grey. Minimal drama, maximum line.", tags: ["women's", "drape", "minimal"] },
-      { title: "Camel commute", creator: "Chloe Kim", category: "Korean", photo: "photo-1539533018447-63fcce2678e3", avatar: "photo-1534528741775-53994a69daeb", description: "Belted camel coat on stone steps. Seoul layers, softly structured.", tags: ["korean", "coat", "street style"] },
-      { title: "Coffee run", creator: "Lena Park", category: "Korean", photo: "photo-1512310604669-443f26c35f52", avatar: "photo-1531123897727-8f129e1688ce", description: "Straight-leg jeans and a fitted top, nothing loud. Off-duty, on point.", tags: ["korean", "denim", "everyday"] },
-      { title: "Teal door", creator: "Rae Kim", category: "Korean", photo: "photo-1496217590455-aa63a8350eea", avatar: "photo-1534528741775-53994a69daeb", description: "Grey mini dress against a teal door. Playful proportions, clean palette.", tags: ["korean", "dress", "street"] },
-      { title: "Scarf season", creator: "Chloe Kim", category: "Korean", photo: "photo-1505022610485-0249ba5b3675", avatar: "photo-1506794778202-cad84cf45f1d", description: "Camel overcoat, checked scarf, leather strap bag. Refined layering.", tags: ["korean", "outerwear", "classic"] },
-      { title: "Bubblegum runners", creator: "Zoe Park", category: "Y2K", photo: "photo-1595950653106-6c9ebd614d3a", avatar: "photo-1534528741775-53994a69daeb", description: "Pastel sneakers on pastel plinths. Sweet, loud, unmistakably Y2K.", tags: ["y2k", "sneakers", "pastel"] },
-      { title: "Everything bag", creator: "Zoe Park", category: "Y2K", photo: "photo-1492707892479-7bc8d5a4ee93", avatar: "photo-1534528741775-53994a69daeb", description: "Quilted bag, gold hoops and gloss laid flat. Night-out essentials.", tags: ["y2k", "accessories", "going out"] },
-      { title: "Charms on", creator: "Rae Kim", category: "Y2K", photo: "photo-1559563458-527698bf5295", avatar: "photo-1534528741775-53994a69daeb", description: "A white backpack with shiny bits and charms. School-run nostalgia.", tags: ["y2k", "accessories", "bag"] },
-      { title: "Ten white shirts", creator: "Studio Nord", category: "Minimalist", photo: "photo-1603252109303-2751441dd157", avatar: "photo-1524504388940-b1c1722653e1", description: "A rail of white shirts, all slightly different. Choose your own uniform.", tags: ["minimalist", "shirts", "capsule"] },
-      { title: "Quiet rail", creator: "Studio Nord", category: "Minimalist", photo: "photo-1558769132-cb1aea458c5e", avatar: "photo-1524504388940-b1c1722653e1", description: "Oatmeal, bone and sand hanging with pampas. Neutrals all the way down.", tags: ["minimalist", "neutral", "rack"] },
-      { title: "Treasure hunting", creator: "June Atelier", category: "Vintage", photo: "photo-1520006403909-838d6b92c22e", avatar: "photo-1531123897727-8f129e1688ce", description: "Hands rifling a rack of prints and knits. The joy is in the dig.", tags: ["vintage", "thrifting", "rack"] },
-      { title: "Boutique hours", creator: "Studio Nord", category: "Vintage", photo: "photo-1441984904996-e0b6ba687e04", avatar: "photo-1544005313-94ddf0286df2", description: "Warm light, hanging rails and slow browsing. Small-shop charm.", tags: ["vintage", "boutique", "shopping"] },
-      { title: "Laydown basics", creator: "Sam Baker", category: "Streetwear", photo: "photo-1544441893-675973e31985", avatar: "photo-1500648767791-00dcc994a43e", description: "Grey denim, black tee and white sneakers, flat on dark. The starter pack.", tags: ["streetwear", "flatlay", "essentials"] },
-      { title: "Trail tee", creator: "Kai Morgan", category: "Streetwear", photo: "photo-1571945153237-4929e783af4a", avatar: "photo-1500648767791-00dcc994a43e", description: "White tee and cap against big sky. Breezy and unbothered.", tags: ["streetwear", "tee", "outdoor"] },
-      { title: "Stairway to summer", creator: "Sofia Lane", category: "Summer fits", photo: "photo-1515372039744-b8f02a3ae446", avatar: "photo-1524504388940-b1c1722653e1", description: "A white eyelet dress on painted steps. Sunshine, but make it lace.", tags: ["summer", "dress", "white"] }
+      { title: "Sunday in the city", creator: "Maya Laurent", category: "Streetwear", photo: "./pictures/sunday in the city.avif", avatar: "./pictures/a little bit retro.avif", description: "Easy layers, good denim, and nowhere in particular to be. The best outfits always leave a little room for the day to surprise you.", tags: ["relaxed denim", "city uniform", "layering"] },
+      { title: "Soft structure", creator: "Studio Sora", category: "Minimalist", photo: "./pictures/soft structure.avif", avatar: "./pictures/after dark.avif", description: "Clean lines with a softer point of view. A quiet palette lets the silhouette do the talking.", tags: ["minimal", "tailoring", "neutral"] },
+      { title: "A little bit retro", creator: "Inez Ward", category: "Vintage", photo: "./pictures/a little bit retro.avif", avatar: "./pictures/air max era.avif", description: "Found-feeling pieces and a lived-in palette make this one feel collected, not constructed.", tags: ["vintage", "secondhand", "90s"] },
+      { title: "Heatwave uniform", creator: "Lola James", category: "Summer fits", photo: "./pictures/heatwave uniform.avif", avatar: "./pictures/back graphic.avif", description: "The kind of outfit that belongs to a long, bright afternoon. Simple pieces, worn your own way.", tags: ["summer", "linen", "weekend"] },
+      { title: "Off-duty, on point", creator: "Kai Morgan", category: "Streetwear", photo: "./pictures/off duty on point.avif", avatar: "./pictures/berry full skirt.avif", description: "An oversized layer and a sharp accessory make an everyday fit feel considered.", tags: ["street style", "oversized", "everyday"] },
+      { title: "After dark", creator: "Nadia Vale", category: "Formal wear", photo: "./pictures/after dark.avif", avatar: "./pictures/bomber season.avif", description: "A little drama, a lot of confidence. Modern evening dressing with nothing extra to prove.", tags: ["evening", "occasion", "statement"] },
+      { title: "Y2K, revisited", creator: "Zoe Park", category: "Y2K", photo: "./pictures/y2k revisted.avif", avatar: "./pictures/borrowed from him.avif", description: "Nostalgia without the costume. A playful nod to the era, styled for right now.", tags: ["y2k", "playful", "going out"] },
+      { title: "Quiet weekend", creator: "Elise Nør", category: "Minimalist", photo: "./pictures/quiet weekend.avif", avatar: "./pictures/boutique hours.avif", description: "A thoughtful edit of everyday essentials in tactile fabrics and easy proportions.", tags: ["capsule", "everyday", "soft tailoring"] },
+      { title: "The good jacket", creator: "Theo Wells", category: "Vintage", photo: "./pictures/the good jacket.avif", avatar: "./pictures/bow at work.avif", description: "One forever layer, worn until it feels like yours. Start with the jacket and build slowly.", tags: ["vintage find", "outerwear", "classic"] },
+      { title: "Sunday market stroll", creator: "June Atelier", category: "Summer fits", photo: "./pictures/sunday market stroll.avif", avatar: "./pictures/camel commute.avif", description: "Lightweight, lived-in and ready for an unplanned detour. This is summer at its easiest.", tags: ["market day", "summer", "easy layers"] },
+      { title: "New romantics", creator: "Mina Ellis", category: "Formal wear", photo: "./pictures/new romantics.avif", avatar: "./pictures/canadian tux.avif", description: "A softer take on occasion dressing, with delicate details against a grounded silhouette.", tags: ["occasion", "romantic", "modern classic"] },
+      { title: "Color outside", creator: "Rae Kim", category: "Y2K", photo: "./pictures/color outside.avif", avatar: "./pictures/chambray classic.avif", description: "A fearless color story balanced by familiar, wearable shapes. Start with one piece you love.", tags: ["color", "y2k", "street style"] },
+      { title: "Borrowed from him", creator: "Alex Rios", category: "Streetwear", photo: "./pictures/borrowed from him.avif", avatar: "./pictures/charms on.avif", description: "Loose, borrowed proportions with a few intentional details to bring the whole thing together.", tags: ["androgynous", "oversized", "streetwear"] },
+      { title: "Sunday best, undone", creator: "Sofia Lane", category: "Vintage", photo: "./pictures/sunday best undone.avif", avatar: "./pictures/coffee run.avif", description: "Classic pieces feel more personal when you let them be a little imperfect.", tags: ["vintage", "classic", "personal style"] },
+      { title: "The linen hour", creator: "Maya Laurent", category: "Summer fits", photo: "./pictures/the linen hour.avif", avatar: "./pictures/cold day formula.avif", description: "Linen, sun, and the freedom to keep the rest simple. An easy outfit worth repeating.", tags: ["linen", "summer", "slow mornings"] },
+      { title: "Golden hour muse", creator: "Ava Chen", category: "Summer fits", photo: "./pictures/golden hour muse.avif", avatar: "./pictures/color outside.avif", description: "Sunglasses on, worries off. Sun-washed color that works from boardwalk to rooftop.", tags: ["summer", "golden hour", "muse"] },
+      { title: "Denim days", creator: "Jonah Reed", category: "90s", photo: "./pictures/denim days.avif", avatar: "./pictures/cozy layers.avif", description: "Head-to-toe denim, worn in all the right places. A 90s uniform that still hits.", tags: ["denim", "90s", "casual"] },
+      { title: "Rack edit", creator: "Studio Nord", category: "Minimalist", photo: "./pictures/rack edit.avif", avatar: "./pictures/crosswalk energy.avif", description: "A tight rack of neutrals and washed denim. Fewer, better pieces on repeat.", tags: ["rack", "capsule", "neutral"] },
+      { title: "Store run", creator: "Remy Cole", category: "Streetwear", photo: "./pictures/boutique hours.avif", avatar: "./pictures/denim days.avif", description: "Workwear jackets, cargos and sneakers. Streetwear staples stacked wall to wall.", tags: ["store", "streetwear", "essentials"] },
+      { title: "Street muse", creator: "Lena Park", category: "Korean", photo: "./pictures/street muse.avif", avatar: "./pictures/denim on denim.avif", description: "Seoul street style: clean sneakers, pleated skirt and an easy oversized blazer.", tags: ["korean", "street style", "preppy"] },
+      { title: "Soft glam", creator: "Nina Rose", category: "Women's", photo: "./pictures/soft glam.avif", avatar: "./pictures/desk side denim.avif", description: "Glowy skin, brushed brows and a slick pony. Beauty that lets the outfit breathe.", tags: ["beauty", "glam", "soft"] },
+      { title: "White tee ritual", creator: "Sam Baker", category: "Outfits", photo: "./pictures/white tee ritual.avif", avatar: "./pictures/double vision.avif", description: "The perfect white tee, jeans and nothing to prove. The everyday outfit formula.", tags: ["basics", "white tee", "outfits"] },
+      { title: "Portrait in style", creator: "Noah Kim", category: "Outfits", photo: "./pictures/portrait in style.avif", avatar: "./pictures/editorial beige.avif", description: "Sharp tailoring, soft attitude. Menswear that balances classic and casual.", tags: ["menswear", "portrait", "tailoring"] },
+      { title: "Field jacket season", creator: "Alex Ford", category: "Vintage", photo: "./pictures/field jacket season.avif", avatar: "./pictures/everything bag.avif", description: "A rugged field jacket over washed denim. Vintage workwear that ages well.", tags: ["jacket", "vintage", "menswear"] },
+      { title: "Denim on denim", creator: "Chloe Kim", category: "Korean", photo: "./pictures/denim on denim.avif", avatar: "./pictures/field jacket season.avif", description: "Double denim with a cropped jacket. K-style casual with clean sneakers.", tags: ["denim", "korean", "casual"] },
+      { title: "Editorial beige", creator: "Ivy Studio", category: "Women's", photo: "./pictures/editorial beige.avif", avatar: "./pictures/flanner hours.avif", description: "Beige trench, gold hoops, slick bun. Quiet luxury for running the city.", tags: ["editorial", "beige", "trench"] },
+      { title: "Linen and light", creator: "Ella Moss", category: "Summer fits", photo: "./pictures/linen and light.avif", avatar: "./pictures/flatlay friday.avif", description: "Barefoot in linen on a bright day. Summer dressing at its softest.", tags: ["linen", "summer", "dress"] },
+      { title: "Night out set", creator: "Zoe Park", category: "Y2K", photo: "./pictures/night out set.avif", avatar: "./pictures/gingham fields.avif", description: "Wind-tossed hair and a black top. The night, captured in monochrome.", tags: ["y2k", "night out", "denim"] },
+      { title: "Cozy layers", creator: "Elise Nor", category: "Minimalist", photo: "./pictures/cozy layers.avif", avatar: "./pictures/golden hour muse.avif", description: "Knit on knit, in soft grays. A cozy capsule you will live in all week.", tags: ["knit", "cozy", "capsule"] },
+      { title: "Air Max era", creator: "Kai Morgan", category: "2000s", photo: "./pictures/air max era.avif", avatar: "./pictures/grey drape.avif", description: "Chunky runners and a low stance. The 2000s sneaker that never really left.", tags: ["2000s", "sneakers", "air max"] },
+      { title: "Wheat-season runners", creator: "Theo Wells", category: "2000s", photo: "./pictures/air max era.avif", avatar: "./pictures/heatwave uniform.avif", description: "Tonal suede high-tops on golden fabric. Basketball energy, street polish.", tags: ["2000s", "sneakers", "suede"] },
+      { title: "Low-rise rules", creator: "Rae Kim", category: "2000s", photo: "./pictures/low rise rules.avif", avatar: "./pictures/hood under denim.avif", description: "Distressed denim and a carefree pose. The 2000s silhouette, worn loud.", tags: ["2000s", "denim", "low rise"] },
+      { title: "Bomber season", creator: "Alex Rios", category: "2000s", photo: "./pictures/bomber season.avif", avatar: "./pictures/hood up.avif", description: "Red hoodie under a flight bomber and dark shades. Subtlety was optional.", tags: ["2000s", "bomber", "street"] },
+      { title: "Primary colors", creator: "Studio Nord", category: "2000s", photo: "./pictures/primary colirs.avif", avatar: "./pictures/linen and light.avif", description: "Reds, yellows and blues racked to the ceiling. Maximal wardrobes, zero restraint.", tags: ["2000s", "color", "rack"] },
+      { title: "The denim wall", creator: "Remy Cole", category: "2000s", photo: "./pictures/the denim wall.avif", avatar: "./pictures/low rise rules.avif", description: "Every wash from pale to raw, stacked floor to ceiling. Denim shopping as a sport.", tags: ["2000s", "denim", "shopping"] },
+      { title: "Main character", creator: "Kai Morgan", category: "Killa", photo: "./pictures/main character.avif", avatar: "./pictures/main character.avif", description: "Cognac leather, black shades and all the confidence in the room.", tags: ["killa", "leather", "statement"] },
+      { title: "Sequin sisters", creator: "Zoe Park", category: "Killa", photo: "./pictures/sequin sisters.avif", avatar: "./pictures/midnight suit.avif", description: "Matching red sequins for the night that needed remembering.", tags: ["killa", "sequin", "night out"] },
+      { title: "Hood up", creator: "Lena Park", category: "Killa", photo: "./pictures/hood up.avif", avatar: "./pictures/new romantics.avif", description: "Grey hoodie, hard striped lines, zero apologies.", tags: ["killa", "hoodie", "street"] },
+      { title: "Peace out", creator: "Alex Rios", category: "Killa", photo: "./pictures/peace out.avif", avatar: "./pictures/night out set.avif", description: "Black tee, graphic front, instant attitude.", tags: ["killa", "graphic tee", "street"] },
+      { title: "Crosswalk energy", creator: "Lena Park", category: "Killa", photo: "./pictures/crosswalk energy.avif", avatar: "./pictures/off duty on point.avif", description: "Printed coat, rust trousers and red shoes mid-stride. The street is the runway.", tags: ["killa", "street style", "outerwear"] },
+      { title: "Back graphic", creator: "Remy Cole", category: "Killa", photo: "./pictures/back graphic.avif", avatar: "./pictures/orchid gown.avif", description: "The print says it best from behind. Cap on, headphones in.", tags: ["killa", "graphic tee", "summer"] },
+      { title: "Power blouse", creator: "Inez Ward", category: "80s", photo: "./pictures/power blouse.avif", avatar: "./pictures/peace out.avif", description: "White ruffles, high-waist buttons and oversized shades. Boardroom boss energy.", tags: ["80s", "blouse", "power dressing"] },
+      { title: "Bow at work", creator: "Sofia Lane", category: "80s", photo: "./pictures/bow at work.avif", avatar: "./pictures/plum hour.avif", description: "A black bow over white poplin. Prep school meets the corner office.", tags: ["80s", "preppy", "shirt"] },
+      { title: "Berry full skirt", creator: "Ella Moss", category: "80s", photo: "./pictures/berry full skirt.avif", avatar: "./pictures/portrait in style.avif", description: "Deep berry buttons and a skirt with volume. Ladylike, with shoulders back.", tags: ["80s", "midi", "color"] },
+      { title: "Gingham fields", creator: "Lola James", category: "80s", photo: "./pictures/gingham fields.avif", avatar: "./pictures/power blouse.avif", description: "Red gingham catching wind in tall grass. Picnic glamour, amplified.", tags: ["80s", "gingham", "summer"] },
+      { title: "Plum hour", creator: "Nadia Vale", category: "80s", photo: "./pictures/plum hour.avif", avatar: "./pictures/primary colirs.avif", description: "Plum lace with strategic cut-outs. Evening dressing with nerve.", tags: ["80s", "lace", "evening"] },
+      { title: "Red sweep", creator: "Mina Ellis", category: "80s", photo: "./pictures/red sweep.avif", avatar: "./pictures/quiet rail.avif", description: "A crimson skirt moving like water. Drama, cut on the bias.", tags: ["80s", "gown", "statement"] },
+      { title: "Hood under denim", creator: "Lena Park", category: "90s", photo: "./pictures/hood under denim.avif", avatar: "./pictures/quiet weekend.avif", description: "Grey hoodie under light-wash denim, blue wall optional. Recess never ended.", tags: ["90s", "denim", "layering"] },
+      { title: "Chambray classic", creator: "Jonah Reed", category: "90s", photo: "./pictures/chambray classic.avif", avatar: "./pictures/rack edit.avif", description: "One soft chambray shirt on a wooden hanger. Wardrobe staple, no notes.", tags: ["90s", "chambray", "essentials"] },
+      { title: "Trucker jacket", creator: "Theo Wells", category: "90s", photo: "./pictures/trucker jacket.avif", avatar: "./pictures/red sweep.avif", description: "Cord-collar denim against black. The 90s trucker, still undefeated.", tags: ["90s", "denim", "jacket"] },
+      { title: "Canadian tux", creator: "Noah Kim", category: "90s", photo: "./pictures/canadian tux.avif", avatar: "./pictures/rose garden.avif", description: "Denim jacket over denim, hand in pocket. When in doubt, double it up.", tags: ["90s", "denim", "menswear"] },
+      { title: "Flannel hours", creator: "Jonah Reed", category: "90s", photo: "./pictures/flanner hours.avif", avatar: "./pictures/scarf season.avif", description: "Plaid flannel and thick frames over coffee. Grunge grew up politely.", tags: ["90s", "flannel", "grunge"] },
+      { title: "Midnight suit", creator: "Noah Kim", category: "Formal wear", photo: "./pictures/midnight suit.avif", avatar: "./pictures/sequin sisters.avif", description: "All-black tailoring with a slim tie. Quiet formality, done right.", tags: ["formal", "suit", "evening"] },
+      { title: "Stripe play", creator: "Marcus Hale", category: "Formal wear", photo: "./pictures/stripe play.avif", avatar: "./pictures/soft glam.avif", description: "Navy worsted, striped tie, adjusting the cuff. Boardroom ready.", tags: ["formal", "suit", "menswear"] },
+      { title: "Orchid gown", creator: "Mina Ellis", category: "Formal wear", photo: "./pictures/orchid gown.avif", avatar: "./pictures/soft structure.avif", description: "Off-shoulder plum satin on a violet backdrop. Red-carpet posture.", tags: ["formal", "gown", "occasion"] },
+      { title: "Windowpane check", creator: "Theo Wells", category: "Formal wear", photo: "./pictures/stripe play.avif", avatar: "./pictures/stairway to summer.avif", description: "A blue plaid three-piece, hands on the lapels. Old-school tailoring, modern fit.", tags: ["formal", "suit", "tailoring"] },
+      { title: "Flatlay Friday", creator: "Sam Baker", category: "Outfits", photo: "./pictures/flatlay friday.avif", avatar: "./pictures/street muse.avif", description: "Boots, belt and grey trousers laid flat. The outfit before the outfit.", tags: ["outfits", "flatlay", "menswear"] },
+      { title: "Wardrobe reset", creator: "Elise Nør", category: "Outfits", photo: "./pictures/wardrobe reset.avif", avatar: "./pictures/stripe play.avif", description: "Knit, denim and tulips on white linen. A soft start to the week.", tags: ["outfits", "flatlay", "neutral"] },
+      { title: "Desk-side denim", creator: "Ivy Studio", category: "Outfits", photo: "./pictures/desk side denim.avif", avatar: "./pictures/sunday best undone.avif", description: "White rib tank, light jeans and heels. The lunch-break outfit formula.", tags: ["outfits", "denim", "basics"] },
+      { title: "Cold-day formula", creator: "June Atelier", category: "Outfits", photo: "./pictures/cold day formula.avif", avatar: "./pictures/sunday in the city.avif", description: "Cream knit, blue jeans and suede booties, folded and ready.", tags: ["outfits", "flatlay", "knit"] },
+      { title: "Double vision", creator: "Ivy Studio", category: "Women's", photo: "./pictures/double vision.avif", avatar: "./pictures/sunday market stroll.avif", description: "Tonal layers on repeat, photographed from above. Dress like a duo.", tags: ["women's", "editorial", "tonal"] },
+      { title: "Rose garden", creator: "Ella Moss", category: "Women's", photo: "./pictures/rose garden.avif", avatar: "./pictures/teal door.avif", description: "A red wrap top among the blooms. Romance, worn casually.", tags: ["women's", "floral", "day"] },
+      { title: "Terracotta glow", creator: "Nina Rose", category: "Women's", photo: "./pictures/terracotta glow.avif", avatar: "./pictures/ten white shirts.avif", description: "Burnt-orange knit and loose waves. Warm tones for cooler days.", tags: ["women's", "color", "portrait"] },
+      { title: "Grey drape", creator: "Studio Sora", category: "Women's", photo: "./pictures/grey drape.avif", avatar: "./pictures/terracotta glow.avif", description: "One sculptural shoulder in dove grey. Minimal drama, maximum line.", tags: ["women's", "drape", "minimal"] },
+      { title: "Camel commute", creator: "Chloe Kim", category: "Korean", photo: "./pictures/camel commute.avif", avatar: "./pictures/the denim wall.avif", description: "Belted camel coat on stone steps. Seoul layers, softly structured.", tags: ["korean", "coat", "street style"] },
+      { title: "Coffee run", creator: "Lena Park", category: "Korean", photo: "./pictures/coffee run.avif", avatar: "./pictures/the good jacket.avif", description: "Straight-leg jeans and a fitted top, nothing loud. Off-duty, on point.", tags: ["korean", "denim", "everyday"] },
+      { title: "Teal door", creator: "Rae Kim", category: "Korean", photo: "./pictures/teal door.avif", avatar: "./pictures/the linen hour.avif", description: "Grey mini dress against a teal door. Playful proportions, clean palette.", tags: ["korean", "dress", "street"] },
+      { title: "Scarf season", creator: "Chloe Kim", category: "Korean", photo: "./pictures/scarf season.avif", avatar: "./pictures/trail tee.avif", description: "Camel overcoat, checked scarf, leather strap bag. Refined layering.", tags: ["korean", "outerwear", "classic"] },
+      { title: "Bubblegum runners", creator: "Zoe Park", category: "Y2K", photo: "./pictures/air max era.avif", avatar: "./pictures/treasure hunting.avif", description: "Pastel sneakers on pastel plinths. Sweet, loud, unmistakably Y2K.", tags: ["y2k", "sneakers", "pastel"] },
+      { title: "Everything bag", creator: "Zoe Park", category: "Y2K", photo: "./pictures/everything bag.avif", avatar: "./pictures/trucker jacket.avif", description: "Quilted bag, gold hoops and gloss laid flat. Night-out essentials.", tags: ["y2k", "accessories", "going out"] },
+      { title: "Charms on", creator: "Rae Kim", category: "Y2K", photo: "./pictures/charms on.avif", avatar: "./pictures/wardrobe reset.avif", description: "A white backpack with shiny bits and charms. School-run nostalgia.", tags: ["y2k", "accessories", "bag"] },
+      { title: "Ten white shirts", creator: "Studio Nord", category: "Minimalist", photo: "./pictures/ten white shirts.avif", avatar: "./pictures/white tee ritual.avif", description: "A rail of white shirts, all slightly different. Choose your own uniform.", tags: ["minimalist", "shirts", "capsule"] },
+      { title: "Quiet rail", creator: "Studio Nord", category: "Minimalist", photo: "./pictures/quiet rail.avif", avatar: "./pictures/y2k revisted.avif", description: "Oatmeal, bone and sand hanging with pampas. Neutrals all the way down.", tags: ["minimalist", "neutral", "rack"] },
+      { title: "Treasure hunting", creator: "June Atelier", category: "Vintage", photo: "./pictures/treasure hunting.avif", avatar: "./pictures/a little bit retro.avif", description: "Hands rifling a rack of prints and knits. The joy is in the dig.", tags: ["vintage", "thrifting", "rack"] },
+      { title: "Boutique hours", creator: "Studio Nord", category: "Vintage", photo: "./pictures/boutique hours.avif", avatar: "./pictures/after dark.avif", description: "Warm light, hanging rails and slow browsing. Small-shop charm.", tags: ["vintage", "boutique", "shopping"] },
+      { title: "Laydown basics", creator: "Sam Baker", category: "Streetwear", photo: "./pictures/flatlay friday.avif", avatar: "./pictures/air max era.avif", description: "Grey denim, black tee and white sneakers, flat on dark. The starter pack.", tags: ["streetwear", "flatlay", "essentials"] },
+      { title: "Trail tee", creator: "Kai Morgan", category: "Streetwear", photo: "./pictures/trail tee.avif", avatar: "./pictures/back graphic.avif", description: "White tee and cap against big sky. Breezy and unbothered.", tags: ["streetwear", "tee", "outdoor"] },
+      { title: "Stairway to summer", creator: "Sofia Lane", category: "Summer fits", photo: "./pictures/stairway to summer.avif", avatar: "./pictures/berry full skirt.avif", description: "A white eyelet dress on painted steps. Sunshine, but make it lace.", tags: ["summer", "dress", "white"] }
     ];
-    const imageUrl = (id, width = 640) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
     const categoryList = document.getElementById("categories");
     const grid = document.getElementById("masonry");
     const search = document.getElementById("search");
@@ -90,6 +89,7 @@
     let activePhotoIndex = -1;
     let toastTimer;
     let authMode = "login";
+    let pendingPhotoIndex = -1;
     const store = {
       users() { try { return JSON.parse(localStorage.getItem("modeboard_users") || "[]"); } catch { return []; } },
       saveUsers(u) { localStorage.setItem("modeboard_users", JSON.stringify(u)); },
@@ -100,7 +100,7 @@
     };
     const currentUser = () => store.session();
     const hash = (s) => btoa(unescape(encodeURIComponent("salt:" + s))).slice(0, 32);
-    const catThumb = (c) => { const p = photos.find((x) => x.category.toLowerCase() === String(c).toLowerCase()) || photos[c.length % photos.length]; return imageUrl(p.photo, 120); };
+    const catThumb = (c) => { const p = photos.find((x) => x.category.toLowerCase() === String(c).toLowerCase()) || photos[c.length % photos.length]; return p.photo; };
 
     function renderCategories() {
       categoryList.innerHTML = categories.map((category) => `<button class="category${category === activeCategory ? " active" : ""}" data-category="${category}" aria-pressed="${category === activeCategory}"><img class="cat-thumb" src="${catThumb(category)}" alt="" loading="lazy"><span class="cat-label">${category}</span></button>`).join("");
@@ -179,11 +179,11 @@
         const saved = isSaved(originalIndex);
         return `<article class="pin" style="animation-delay:${Math.min(index * 35, 350)}ms">
           <div class="pin-image-wrap" data-open="${originalIndex}" tabindex="0" role="button" aria-label="View ${photo.title}">
-            <img class="pin-image" src="${imageUrl(photo.photo)}" alt="${photo.title}" loading="lazy">
+            <img class="pin-image" src="${photo.photo}" alt="${photo.title}" loading="lazy">
             <button class="save-button${saved ? " saved" : ""}" data-save="${originalIndex}">${saved ? "Saved" : "Save"}</button>
             <div class="pin-actions"><button class="icon-button" data-like="${originalIndex}" aria-label="Like ${photo.title}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"></path></svg></button><button class="icon-button" data-more="${originalIndex}" aria-label="More options for ${photo.title}"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg></button></div>
           </div>
-          <div class="pin-caption"><img class="creator-avatar" src="${imageUrl(photo.avatar, 96)}" alt=""><div class="caption-copy"><p class="pin-title">${photo.title}</p><p class="creator">${photo.creator}</p></div><button class="pin-more" data-more="${originalIndex}" aria-label="More options">•••</button></div>
+          <div class="pin-caption"><img class="creator-avatar" src="${photo.avatar}" alt=""><div class="caption-copy"><p class="pin-title">${photo.title}</p><p class="creator">${photo.creator}</p></div><button class="pin-more" data-more="${originalIndex}" aria-label="More options">•••</button></div>
         </article>`;
       }).join("");
       const rc = document.getElementById("result-count"); if (rc) rc.remove();
@@ -209,40 +209,71 @@
 
     function openDetails(index) {
       activePhoto = photos[index]; activePhotoIndex = index;
-      document.getElementById("detail-image").src = imageUrl(activePhoto.photo, 1100);
+      document.getElementById("detail-image").src = activePhoto.photo;
       document.getElementById("detail-image").alt = activePhoto.title;
       document.getElementById("detail-title").textContent = activePhoto.title;
       document.getElementById("detail-description").textContent = activePhoto.description;
-      document.getElementById("detail-avatar").src = imageUrl(activePhoto.avatar, 96);
+      document.getElementById("detail-avatar").src = activePhoto.avatar;
       document.getElementById("detail-creator").textContent = activePhoto.creator;
       document.getElementById("detail-tags").innerHTML = activePhoto.tags.map((tag) => `<span class="tag">#${tag}</span>`).join("");
       const related = photos.filter((photo) => photo !== activePhoto && photo.category === activePhoto.category).slice(0, 4);
-      document.getElementById("related-row").innerHTML = related.map((photo) => `<img src="${imageUrl(photo.photo, 160)}" alt="${photo.title}">`).join("");
+      document.getElementById("related-row").innerHTML = related.map((photo) => `<img src="${photo.photo}" alt="${photo.title}">`).join("");
       syncDetailSave();
       document.getElementById("modal").classList.add("open");
       document.body.classList.add("modal-open");
       document.getElementById("close-modal").focus();
     }
 
-    function setAuthMode(mode) {
+    function setAuthMode(mode, options = {}) {
       authMode = mode;
       const login = mode === "login";
       document.getElementById("tab-login").classList.toggle("on", login);
       document.getElementById("tab-register").classList.toggle("on", !login);
       document.getElementById("name-field").style.display = login ? "none" : "grid";
       document.getElementById("auth-title").textContent = login ? "Welcome back" : "Welcome to Moodboard";
-      document.getElementById("auth-sub").textContent = login ? "Log in to save looks and join the community." : "Sign up to save looks, comment and build boards.";
+      document.getElementById("auth-sub").textContent = options.message || (login ? "Log in to save looks and join the community." : "Sign up to save looks, comment and build boards.");
       document.getElementById("auth-submit").textContent = login ? "Log in" : "Sign up";
       document.getElementById("auth-switch-text").textContent = login ? "Not on Moodboard yet?" : "Already a member?";
       document.getElementById("auth-switch").textContent = login ? "Sign up" : "Log in";
       document.getElementById("auth-error").hidden = true;
     }
-    function openAuth(mode = "login") { setAuthMode(mode); document.getElementById("auth-modal").classList.add("open"); document.body.classList.add("modal-open"); setTimeout(() => document.getElementById("auth-email").focus(), 60); }
-    function closeAuth() { document.getElementById("auth-modal").classList.remove("open"); if (!document.getElementById("modal").classList.contains("open")) document.body.classList.remove("modal-open"); }
+    const GATE_MESSAGE = "Log in or create an account to view the full details and main picture.";
+    function openAuth(mode = "login", options = {}) { setAuthMode(mode, options); document.getElementById("auth-modal").classList.add("open"); document.body.classList.add("modal-open"); setTimeout(() => document.getElementById("auth-email").focus(), 60); }
+    function closeAuth(manual = true) { document.getElementById("auth-modal").classList.remove("open"); if (!document.getElementById("modal").classList.contains("open")) document.body.classList.remove("modal-open"); if (manual) pendingPhotoIndex = -1; }
+    function handleAuthSuccess(message) {
+      closeAuth(false); renderAuthArea(); renderPins();
+      showToast(message);
+      document.getElementById("auth-form").reset();
+      if (pendingPhotoIndex >= 0 && pendingPhotoIndex < photos.length) {
+        const next = pendingPhotoIndex;
+        pendingPhotoIndex = -1;
+        openDetails(next);
+      } else {
+        pendingPhotoIndex = -1;
+      }
+    }
+
+    function requestPhotoAccess(index) {
+      const i = Number(index);
+      if (!Number.isFinite(i) || i < 0 || i >= photos.length) return false;
+      if (currentUser()) { pendingPhotoIndex = -1; openDetails(i); return true; }
+      pendingPhotoIndex = i;
+      openAuth("register", { message: GATE_MESSAGE });
+      showToast("Log in or sign up to view this look");
+      return false;
+    }
 
     renderCategories();
     renderPins();
     renderAuthArea();
+
+    document.getElementById("auth-area").addEventListener("click", (event) => {
+      const button = event.target.closest('[data-action="login"], [data-action="signup"]');
+      if (!button) return;
+      event.stopPropagation();
+      pendingPhotoIndex = -1;
+      openAuth(button.dataset.action === "signup" ? "register" : "login");
+    });
 
     categoryList.addEventListener("click", (event) => {
       const button = event.target.closest("[data-category]");
@@ -264,13 +295,13 @@
       if (save) { event.stopPropagation(); toggleSave(Number(save.dataset.save)); }
       else if (like) { event.stopPropagation(); if (!currentUser()) { openAuth("register"); showToast("Sign up to like looks"); } else { like.style.color = "var(--accent)"; showToast("Added to your likes"); } }
       else if (more) { event.stopPropagation(); showToast("More options coming soon"); }
-      else if (pin) openDetails(Number(pin.dataset.open));
+      else if (pin && !event.target.closest('header, .topbar, button, a, input, select, textarea, [contenteditable="true"], [role="link"], [role="button"]:not([data-open])')) requestPhotoAccess(pin.dataset.open);
     });
 
     grid.addEventListener("keydown", (event) => {
       if ((event.key === "Enter" || event.key === " ") && event.target.matches("[data-open]")) {
         event.preventDefault();
-        openDetails(Number(event.target.dataset.open));
+        requestPhotoAccess(event.target.dataset.open);
       }
     });
 
@@ -298,11 +329,11 @@
       input.value = "";
       showToast("Note posted");
     });
-    document.getElementById("auth-close").addEventListener("click", closeAuth);
+    document.getElementById("auth-close").addEventListener("click", () => closeAuth());
     document.getElementById("auth-modal").addEventListener("click", (e) => { if (e.target.id === "auth-modal") closeAuth(); });
-    document.getElementById("tab-login").addEventListener("click", () => setAuthMode("login"));
-    document.getElementById("tab-register").addEventListener("click", () => setAuthMode("register"));
-    document.getElementById("auth-switch").addEventListener("click", () => setAuthMode(authMode === "login" ? "register" : "login"));
+    document.getElementById("tab-login").addEventListener("click", () => setAuthMode("login", pendingPhotoIndex >= 0 ? { message: GATE_MESSAGE } : {}));
+    document.getElementById("tab-register").addEventListener("click", () => setAuthMode("register", pendingPhotoIndex >= 0 ? { message: GATE_MESSAGE } : {}));
+    document.getElementById("auth-switch").addEventListener("click", () => setAuthMode(authMode === "login" ? "register" : "login", pendingPhotoIndex >= 0 ? { message: GATE_MESSAGE } : {}));
     document.getElementById("auth-form").addEventListener("submit", (e) => {
       e.preventDefault();
       const email = document.getElementById("auth-email").value.trim().toLowerCase();
@@ -318,14 +349,13 @@
         if (users.some((u) => u.email === email)) return fail("That email already has an account. Try logging in.");
         const user = { name, email, pass: hash(pass), created: Date.now() };
         users.push(user); store.saveUsers(users); store.saveSession({ name, email });
-        closeAuth(); renderAuthArea(); renderPins(); showToast(`Welcome to Moodboard, ${name.split(" ")[0]}!`);
+        handleAuthSuccess(`Welcome to Moodboard, ${name.split(" ")[0]}!`);
       } else {
         const found = users.find((u) => u.email === email);
         if (!found || found.pass !== hash(pass)) return fail("Email or password didn't match. Try again or sign up.");
         store.saveSession({ name: found.name, email });
-        closeAuth(); renderAuthArea(); renderPins(); showToast(`Welcome back, ${(found.name || "friend").split(" ")[0]}!`);
+        handleAuthSuccess(`Welcome back, ${(found.name || "friend").split(" ")[0]}!`);
       }
-      document.getElementById("auth-form").reset();
     });
     document.addEventListener("keydown", (event) => { if (event.key === "Escape") { closeModal(); closeAuth(); } });
     document.body.addEventListener("click", (event) => {
@@ -333,8 +363,8 @@
       const action = el?.dataset.action;
       const um = document.getElementById("user-menu");
       if (!event.target.closest(".auth-area") && um) um.hidden = true;
-      if (action === "login") openAuth("login");
-      else if (action === "signup") openAuth("register");
+      if (action === "login") { pendingPhotoIndex = -1; openAuth("login"); }
+      else if (action === "signup") { pendingPhotoIndex = -1; openAuth("register"); }
       else if (action === "menu") { const m = document.getElementById("user-menu"); if (m) m.hidden = !m.hidden; }
       else if (action === "logout") { activeView = "home"; activeCategory = "All"; const sv = document.getElementById("search"); if (sv) sv.value = ""; store.saveSession(null); renderAuthArea(); renderCategories(); renderPins(); showToast("Logged out. See you soon!"); }
       else if (action === "profile" || action === "saved") {

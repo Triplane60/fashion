@@ -42,6 +42,8 @@
     .section-head { display: none; }
     body.logged-in .hero { display: none; }
     body:not(.logged-in) .masonry .pin-image { filter: blur(8px); }
+    body:not(.logged-in) .masonry .pin-image-wrap::before { content: "Log in to view"; position: absolute; z-index: 2; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 10px 16px; border-radius: 999px; background: rgb(17 29 19 / 82%); color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .01em; white-space: nowrap; pointer-events: none; }
+    body:not(.logged-in) .masonry .pin-image-wrap { cursor: pointer; }
     .avatar { width: 40px; height: 40px; flex: 0 0 auto; border-radius: 50%; object-fit: cover; background: #cfe3d2; }
     .avatar-fallback { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: var(--ink); color: #fff; font-weight: 800; }
     .user-menu { position: absolute; right: 12px; top: 70px; z-index: 20; width: 260px; padding: 12px; border-radius: 16px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); }
@@ -96,6 +98,7 @@
     .back-btn:hover { background: var(--pill); }
     .modal-backdrop { position: fixed; inset: 0; z-index: 40; display: none; place-items: center; padding: 25px; background: rgb(0 0 0 / 55%); backdrop-filter: blur(3px); }
     .modal-backdrop.open { display: grid; animation: fade .2s ease; }
+    #auth-modal { z-index: 41; }
     @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
     .detail-modal { position: relative; display: grid; width: min(1050px, 96vw); max-height: min(760px, 92vh); grid-template-columns: minmax(0, 1.08fr) minmax(340px, .92fr); overflow: hidden; border-radius: 28px; background: white; box-shadow: var(--shadow); animation: rise .25s ease; }
     @keyframes rise { from { transform: translateY(10px) scale(.99); } to { transform: none; } }
