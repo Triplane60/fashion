@@ -86,38 +86,68 @@
     let activeCategory = "All";
     let activeView = "home";
     let activePhoto = null;
-    let activePhotoIndex = -1;
+    let activePhotoKey = null;
     let toastTimer;
     let authMode = "login";
-    let pendingPhotoIndex = -1;
+    let pendingPhotoKey = null;
     const store = {
       users() { try { return JSON.parse(localStorage.getItem("modeboard_users") || "[]"); } catch { return []; } },
       saveUsers(u) { localStorage.setItem("modeboard_users", JSON.stringify(u)); },
       session() { return JSON.parse(localStorage.getItem("modeboard_session") || "null"); },
       saveSession(s) { s ? localStorage.setItem("modeboard_session", JSON.stringify(s)) : localStorage.removeItem("modeboard_session"); },
       saved() { try { return JSON.parse(localStorage.getItem("modeboard_saved") || "{}"); } catch { return {}; } },
-      saveSaved(s) { localStorage.setItem("modeboard_saved", JSON.stringify(s)); }
+      saveSaved(s) { localStorage.setItem("modeboard_saved", JSON.stringify(s)); },
+      posts() { try { return JSON.parse(localStorage.getItem("modeboard_posts") || "[]"); } catch { return []; } },
+      savePosts(p) { try { localStorage.setItem("modeboard_posts", JSON.stringify(p)); return true; } catch { showToast("That photo is too large to keep in this browser."); return false; } }
     };
+    const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const avatarFor = (name) => {
+      const initial = (String(name || "M").trim().charAt(0) || "M").toUpperCase();
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" rx="32" fill="#1a7a33"/><text x="32" y="42" font-family="Georgia,serif" font-size="30" font-weight="bold" fill="#ffffff" text-anchor="middle">${initial}</text></svg>`;
+      return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+    };
+    const feedPosts = () => store.posts().slice().sort((a, b) => (a.created || 0) - (b.created || 0)).map((p) => ({
+      id: p.id, mine: true, title: p.title || "Untitled look", creator: p.ownerName || "Moodboard member",
+      category: p.category || "Outfits", photo: p.photo, avatar: avatarFor(p.ownerName),
+      description: p.description || "", tags: Array.isArray(p.tags) ? p.tags : []
+    }));
+    window.Moodboard = { photos };
+    const allPhotos = () => photos.concat(feedPosts());
+    const photoKey = (photo, idx) => (photo && photo.mine ? "mine:" + photo.id : String(idx));
+    function findPhoto(key) {
+      const k = String(key);
+      if (k.startsWith("mine:")) { const id = k.slice(5); return allPhotos().find((p) => p.mine && String(p.id) === id) || null; }
+      const i = Number(k);
+      if (!Number.isFinite(i) || i < 0 || i >= photos.length) return null;
+      return photos[i];
+    }
     const currentUser = () => store.session();
     const hash = (s) => btoa(unescape(encodeURIComponent("salt:" + s))).slice(0, 32);
     const catThumb = (c) => { const p = photos.find((x) => x.category.toLowerCase() === String(c).toLowerCase()) || photos[c.length % photos.length]; return p.photo; };
 
     function renderCategories() {
-      categoryList.innerHTML = categories.map((category) => `<button class="category${category === activeCategory ? " active" : ""}" data-category="${category}" aria-pressed="${category === activeCategory}"><img class="cat-thumb" src="${catThumb(category)}" alt="" loading="lazy"><span class="cat-label">${category}</span></button>`).join("");
+      categoryList.innerHTML = categories.map((category) => `<button class="category${category === activeCategory ? " active" : ""}" data-category="${category}" aria-pressed="${category === activeCategory}"><img class="cat-thumb" src="${catThumb(category)}" alt="" loading="lazy" draggable="false"><span class="cat-label">${category}</span></button>`).join("");
+      updateCatArrows();
     }
 
-    function isSaved(i) { const u = currentUser(); if (!u) return false; return (store.saved()[u.email] || []).includes(i); }
-    function toggleSave(i) {
+    const META_KEY = "modeboard_saved_meta";
+    const readSavedMeta = () => { try { return JSON.parse(localStorage.getItem(META_KEY) || "{}"); } catch { return {}; } };
+    const writeSavedMeta = (m) => { try { localStorage.setItem(META_KEY, JSON.stringify(m)); } catch { /* quota: thumbs still render from posts */ } };
+    function isSaved(key) { const u = currentUser(); if (!u) return false; return (store.saved()[u.email] || []).map(String).includes(String(key)); }
+    function toggleSave(key) {
+      key = String(key);
       const u = currentUser();
       if (!u) { openAuth("register"); showToast("Sign up to save this look"); return false; }
-      const all = store.saved(); const list = new Set(all[u.email] || []);
-      list.has(i) ? list.delete(i) : list.add(i);
-      all[u.email] = [...list]; store.saveSaved(all); renderPins(); syncDetailSave();
-      showToast(list.has(i) ? "Saved to your board" : "Removed from your board");
-      return list.has(i);
+      const all = store.saved(); const list = new Set((all[u.email] || []).map(String));
+      const meta = readSavedMeta();
+      if (list.has(key)) { list.delete(key); delete meta[key]; }
+      else { list.add(key); const snap = findPhoto(key); if (snap) meta[key] = { title: snap.title, photo: snap.photo, category: snap.category }; }
+      all[u.email] = [...list]; store.saveSaved(all); writeSavedMeta(meta); renderPins(); syncDetailSave();
+      showToast(list.has(key) ? "Saved to your board" : "Removed from your board");
+      return list.has(key);
     }
 
-    function getSavedIds() { const u = currentUser(); if (!u) return []; return store.saved()[u.email] || []; }
+    function getSavedIds() { const u = currentUser(); if (!u) return []; return (store.saved()[u.email] || []).map(String); }
 
     function showSaved() {
       const u = currentUser();
@@ -141,7 +171,7 @@
       const initial = (u.name || u.email || "M").trim().charAt(0).toUpperCase();
       box.innerHTML = `<button class="avatar-btn" data-action="menu" aria-label="Account"><span class="avatar-fallback">${initial}</span><span>▾</span></button>
       <div class="user-menu" id="user-menu" hidden><div class="user-head"><span class="avatar-fallback">${initial}</span><div><b>${u.name || "Moodboard member"}</b><small>${u.email}</small></div></div>
-      <button data-action="profile">View profile</button><button data-action="saved">Saved looks</button><button data-action="logout">Log out</button></div>`;
+      <button data-action="profile">View profile</button><button data-action="logout">Log out</button></div>`;
     }
 
     function inScope(photo) {
@@ -160,8 +190,8 @@
       const inSavedView = activeView === "saved";
       document.getElementById("saved-header").hidden = !inSavedView;
       document.querySelector(".filter-row").style.display = inSavedView ? "none" : "";
-      let list = photos.map((photo, idx) => ({ photo, idx }));
-      if (inSavedView) list = list.filter(({ idx }) => savedIds.has(idx));
+      let list = allPhotos().map((photo, idx) => ({ photo, key: photoKey(photo, idx) }));
+      if (inSavedView) list = list.filter(({ key }) => savedIds.has(key));
       else list = list.filter(({ photo }) => inScope(photo));
       const filtered = list.filter(({ photo }) => (!query || query === "fashion" || `${photo.title} ${photo.creator} ${photo.category} ${photo.tags.join(" ")}`.toLowerCase().includes(query)));
       const countEl = document.getElementById("saved-count");
@@ -175,15 +205,16 @@
         if (emptyTitle) emptyTitle.textContent = "No looks found just yet.";
         if (emptyText) emptyText.textContent = "Try another search or category.";
       }
-      grid.innerHTML = filtered.map(({ photo, idx: originalIndex }, index) => {
-        const saved = isSaved(originalIndex);
+      grid.innerHTML = filtered.map(({ photo, key: originalKey }, index) => {
+        const saved = isSaved(originalKey);
+        const safeTitle = esc(photo.title); const safeCreator = esc(photo.creator);
         return `<article class="pin" style="animation-delay:${Math.min(index * 35, 350)}ms">
-          <div class="pin-image-wrap" data-open="${originalIndex}" tabindex="0" role="button" aria-label="View ${photo.title}">
-            <img class="pin-image" src="${photo.photo}" alt="${photo.title}" loading="lazy">
-            <button class="save-button${saved ? " saved" : ""}" data-save="${originalIndex}">${saved ? "Saved" : "Save"}</button>
-            <div class="pin-actions"><button class="icon-button" data-like="${originalIndex}" aria-label="Like ${photo.title}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"></path></svg></button><button class="icon-button" data-more="${originalIndex}" aria-label="More options for ${photo.title}"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg></button></div>
+          <div class="pin-image-wrap" data-open="${esc(originalKey)}" tabindex="0" role="button" aria-label="View ${safeTitle}">
+            <img class="pin-image" src="${esc(photo.photo)}" alt="${safeTitle}" loading="lazy">
+            <button class="save-button${saved ? " saved" : ""}" data-save="${esc(originalKey)}">${saved ? "Saved" : "Save"}</button>
+            <div class="pin-actions"><button class="icon-button" data-like="${esc(originalKey)}" aria-label="Like ${safeTitle}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"></path></svg></button><button class="icon-button" data-more="${esc(originalKey)}" aria-label="More options for ${safeTitle}"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.7"></circle><circle cx="12" cy="12" r="1.7"></circle><circle cx="19" cy="12" r="1.7"></circle></svg></button></div>
           </div>
-          <div class="pin-caption"><img class="creator-avatar" src="${photo.avatar}" alt=""><div class="caption-copy"><p class="pin-title">${photo.title}</p><p class="creator">${photo.creator}</p></div><button class="pin-more" data-more="${originalIndex}" aria-label="More options">•••</button></div>
+          <div class="pin-caption"><img class="creator-avatar" src="${esc(photo.avatar)}" alt=""><div class="caption-copy"><p class="pin-title">${safeTitle}</p><p class="creator">${safeCreator}</p></div><button class="pin-more" data-more="${esc(originalKey)}" aria-label="More options">•••</button></div>
         </article>`;
       }).join("");
       const rc = document.getElementById("result-count"); if (rc) rc.remove();
@@ -201,22 +232,23 @@
 
     function syncDetailSave() {
       const b = document.getElementById("detail-save");
-      const saved = activePhotoIndex >= 0 && isSaved(activePhotoIndex);
+      const saved = activePhotoKey != null && isSaved(activePhotoKey);
       b.classList.toggle("saved", saved);
       b.textContent = saved ? "Saved" : "Save";
       b.style.cssText = saved ? "opacity:1;transform:none;background:#111d13;color:#fff;border-radius:999px;padding:12px 18px;font-size:14px;" : "opacity:1;transform:none;border-radius:999px;padding:12px 18px;font-size:14px;";
     }
 
-    function openDetails(index) {
-      activePhoto = photos[index]; activePhotoIndex = index;
+    function openDetails(key) {
+      activePhoto = findPhoto(key); activePhotoKey = activePhoto ? String(key) : null;
+      if (!activePhoto) return;
       document.getElementById("detail-image").src = activePhoto.photo;
       document.getElementById("detail-image").alt = activePhoto.title;
       document.getElementById("detail-title").textContent = activePhoto.title;
       document.getElementById("detail-description").textContent = activePhoto.description;
       document.getElementById("detail-avatar").src = activePhoto.avatar;
       document.getElementById("detail-creator").textContent = activePhoto.creator;
-      document.getElementById("detail-tags").innerHTML = activePhoto.tags.map((tag) => `<span class="tag">#${tag}</span>`).join("");
-      const related = photos.filter((photo) => photo !== activePhoto && photo.category === activePhoto.category).slice(0, 4);
+      document.getElementById("detail-tags").innerHTML = activePhoto.tags.map((tag) => `<span class="tag">#${esc(tag)}</span>`).join("");
+      const related = allPhotos().filter((photo) => photo !== activePhoto && photo.category === activePhoto.category).slice(0, 4);
       document.getElementById("related-row").innerHTML = related.map((photo) => `<img src="${photo.photo}" alt="${photo.title}">`).join("");
       syncDetailSave();
       document.getElementById("modal").classList.add("open");
@@ -239,25 +271,25 @@
     }
     const GATE_MESSAGE = "Log in or create an account to view the full details and main picture.";
     function openAuth(mode = "login", options = {}) { setAuthMode(mode, options); document.getElementById("auth-modal").classList.add("open"); document.body.classList.add("modal-open"); setTimeout(() => document.getElementById("auth-email").focus(), 60); }
-    function closeAuth(manual = true) { document.getElementById("auth-modal").classList.remove("open"); if (!document.getElementById("modal").classList.contains("open")) document.body.classList.remove("modal-open"); if (manual) pendingPhotoIndex = -1; }
+    function closeAuth(manual = true) { document.getElementById("auth-modal").classList.remove("open"); if (!document.getElementById("modal").classList.contains("open")) document.body.classList.remove("modal-open"); if (manual) pendingPhotoKey = null; }
     function handleAuthSuccess(message) {
       closeAuth(false); renderAuthArea(); renderPins();
       showToast(message);
       document.getElementById("auth-form").reset();
-      if (pendingPhotoIndex >= 0 && pendingPhotoIndex < photos.length) {
-        const next = pendingPhotoIndex;
-        pendingPhotoIndex = -1;
+      if (pendingPhotoKey != null && findPhoto(pendingPhotoKey)) {
+        const next = pendingPhotoKey;
+        pendingPhotoKey = null;
         openDetails(next);
       } else {
-        pendingPhotoIndex = -1;
+        pendingPhotoKey = null;
       }
     }
 
-    function requestPhotoAccess(index) {
-      const i = Number(index);
-      if (!Number.isFinite(i) || i < 0 || i >= photos.length) return false;
-      if (currentUser()) { pendingPhotoIndex = -1; openDetails(i); return true; }
-      pendingPhotoIndex = i;
+    function requestPhotoAccess(key) {
+      const photo = findPhoto(key);
+      if (!photo) return false;
+      if (currentUser()) { pendingPhotoKey = null; openDetails(String(key)); return true; }
+      pendingPhotoKey = String(key);
       openAuth("register", { message: GATE_MESSAGE });
       showToast("Log in or sign up to view this look");
       return false;
@@ -267,11 +299,41 @@
     renderPins();
     renderAuthArea();
 
+    /* Horizontal category scroller: arrow buttons + drag-to-scroll */
+    function updateCatArrows() {
+      const prev = document.getElementById("cat-prev");
+      const next = document.getElementById("cat-next");
+      if (!prev || !next || !categoryList) return;
+      const max = categoryList.scrollWidth - categoryList.clientWidth;
+      const atStart = categoryList.scrollLeft <= 2;
+      const atEnd = categoryList.scrollLeft >= max - 2;
+      prev.disabled = atStart; next.disabled = atEnd;
+      prev.style.visibility = atStart && max > 0 ? "hidden" : "visible";
+      next.style.visibility = atEnd ? "hidden" : "visible";
+    }
+    function scrollCats(dir) { categoryList.scrollBy({ left: dir * Math.max(categoryList.clientWidth * 0.7, 220), behavior: "smooth" }); }
+    document.getElementById("cat-prev").addEventListener("click", () => scrollCats(-1));
+    document.getElementById("cat-next").addEventListener("click", () => scrollCats(1));
+    categoryList.addEventListener("scroll", updateCatArrows, { passive: true });
+    window.addEventListener("resize", updateCatArrows);
+    (function enableCatDrag() {
+      let down = false, startX = 0, startLeft = 0, moved = false;
+      categoryList.addEventListener("pointerdown", (e) => { down = true; moved = false; startX = e.clientX; startLeft = categoryList.scrollLeft; });
+      categoryList.addEventListener("pointermove", (e) => {
+        if (!down) return;
+        const dx = e.clientX - startX;
+        if (Math.abs(dx) > 6) { moved = true; categoryList.scrollLeft = startLeft - dx; }
+      });
+      ["pointerup", "pointercancel", "pointerleave"].forEach((ev) => categoryList.addEventListener(ev, () => { down = false; }));
+      categoryList.addEventListener("click", (e) => { if (moved) { e.stopPropagation(); e.preventDefault(); moved = false; } }, true);
+    })();
+    window.addEventListener("storage", (e) => { if (e.key === "modeboard_posts") renderPins(); });
+
     document.getElementById("auth-area").addEventListener("click", (event) => {
       const button = event.target.closest('[data-action="login"], [data-action="signup"]');
       if (!button) return;
       event.stopPropagation();
-      pendingPhotoIndex = -1;
+      pendingPhotoKey = null;
       openAuth(button.dataset.action === "signup" ? "register" : "login");
     });
 
@@ -292,7 +354,7 @@
       const like = event.target.closest("[data-like]");
       const more = event.target.closest("[data-more]");
       const pin = event.target.closest("[data-open]");
-      if (save) { event.stopPropagation(); toggleSave(Number(save.dataset.save)); }
+      if (save) { event.stopPropagation(); toggleSave(save.dataset.save); }
       else if (like) { event.stopPropagation(); if (!currentUser()) { openAuth("register"); showToast("Sign up to like looks"); } else { like.style.color = "var(--accent)"; showToast("Added to your likes"); } }
       else if (more) { event.stopPropagation(); showToast("More options coming soon"); }
       else if (pin && !event.target.closest('header, .topbar, button, a, input, select, textarea, [contenteditable="true"], [role="link"], [role="button"]:not([data-open])')) requestPhotoAccess(pin.dataset.open);
@@ -316,7 +378,7 @@
     document.getElementById("close-modal").addEventListener("click", closeModal);
     document.getElementById("modal").addEventListener("click", (event) => { if (event.target.id === "modal") closeModal(); });
     document.addEventListener("keydown", (event) => { if (event.key === "Escape") closeModal(); });
-    document.getElementById("detail-save").addEventListener("click", () => { if (activePhotoIndex >= 0) toggleSave(activePhotoIndex); });
+    document.getElementById("detail-save").addEventListener("click", () => { if (activePhotoKey != null) toggleSave(activePhotoKey); });
     document.getElementById("detail-like").addEventListener("click", () => { if (!currentUser()) { openAuth("register"); showToast("Sign up to like looks"); } else showToast("Added to your likes"); });
     document.getElementById("comment-form").addEventListener("submit", (event) => {
       event.preventDefault();
@@ -331,9 +393,9 @@
     });
     document.getElementById("auth-close").addEventListener("click", () => closeAuth());
     document.getElementById("auth-modal").addEventListener("click", (e) => { if (e.target.id === "auth-modal") closeAuth(); });
-    document.getElementById("tab-login").addEventListener("click", () => setAuthMode("login", pendingPhotoIndex >= 0 ? { message: GATE_MESSAGE } : {}));
-    document.getElementById("tab-register").addEventListener("click", () => setAuthMode("register", pendingPhotoIndex >= 0 ? { message: GATE_MESSAGE } : {}));
-    document.getElementById("auth-switch").addEventListener("click", () => setAuthMode(authMode === "login" ? "register" : "login", pendingPhotoIndex >= 0 ? { message: GATE_MESSAGE } : {}));
+    document.getElementById("tab-login").addEventListener("click", () => setAuthMode("login", pendingPhotoKey != null ? { message: GATE_MESSAGE } : {}));
+    document.getElementById("tab-register").addEventListener("click", () => setAuthMode("register", pendingPhotoKey != null ? { message: GATE_MESSAGE } : {}));
+    document.getElementById("auth-switch").addEventListener("click", () => setAuthMode(authMode === "login" ? "register" : "login", pendingPhotoKey != null ? { message: GATE_MESSAGE } : {}));
     document.getElementById("auth-form").addEventListener("submit", (e) => {
       e.preventDefault();
       const email = document.getElementById("auth-email").value.trim().toLowerCase();
@@ -342,7 +404,7 @@
       const err = document.getElementById("auth-error");
       const fail = (m) => { err.textContent = m; err.hidden = false; };
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return fail("Enter a valid email address.");
-      if (pass.length < 6) return fail("Password must be at least 6 characters.");
+      if (pass.length < 8 || pass.length > 12) return fail("Password must be between 8 and 12 characters.");
       const users = store.users();
       if (authMode === "register") {
         if (!name) return fail("Tell us your name so friends can find you.");
@@ -363,16 +425,17 @@
       const action = el?.dataset.action;
       const um = document.getElementById("user-menu");
       if (!event.target.closest(".auth-area") && um) um.hidden = true;
-      if (action === "login") { pendingPhotoIndex = -1; openAuth("login"); }
-      else if (action === "signup") { pendingPhotoIndex = -1; openAuth("register"); }
+      if (action === "login") { pendingPhotoKey = null; openAuth("login"); }
+      else if (action === "signup") { pendingPhotoKey = null; openAuth("register"); }
       else if (action === "menu") { const m = document.getElementById("user-menu"); if (m) m.hidden = !m.hidden; }
       else if (action === "logout") { activeView = "home"; activeCategory = "All"; const sv = document.getElementById("search"); if (sv) sv.value = ""; store.saveSession(null); renderAuthArea(); renderCategories(); renderPins(); showToast("Logged out. See you soon!"); }
       else if (action === "profile" || action === "saved") {
         const u = currentUser();
         if (action === "saved") showSaved();
-        else showToast(u ? `Hi ${u.name.split(" ")[0]} — profile pages are coming soon` : "Log in to see your profile");
+        else if (u) window.location.href = "profile.html";
+        else { openAuth("login"); showToast("Log in to see your profile"); }
       }
-      else if (action === "create") { if (!currentUser()) { openAuth("register"); showToast("Sign up to create your first board"); } else showToast("Your next moodboard starts here"); }
+      else if (action === "create") { if (!currentUser()) { openAuth("register"); showToast("Sign up to create your first board"); } else window.location.href = "profile.html#post"; }
       else if (action === "home") { activeView = "home"; activeCategory = "All"; search.value = ""; renderCategories(); renderPins(); window.scrollTo({ top: 0, behavior: "smooth" }); }
       else if (action === "settings") showToast("Settings live here soon");
       else if (action === "visual-search" || action === "voice") showToast("Try typing — smart image + voice search is coming soon");
