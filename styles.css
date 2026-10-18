@@ -234,7 +234,9 @@
     .profile-empty[style*="none"] { display: none; }
     .empty-icon { display: grid; place-items: center; width: 60px; height: 60px; margin: 0 auto 14px; border-radius: 50%; background: var(--pill); color: var(--accent); font-size: 26px; }
     .card-menu-wrap { position: relative; margin-left: auto; }
-    .card-menu { position: absolute; right: 0; top: 32px; z-index: 5; min-width: 150px; padding: 6px; border-radius: 14px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); display: grid; }
+    .card-menu { position: absolute; right: 0; top: 32px; z-index: 5; min-width: 150px; padding: 6px; border-radius: 14px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); display: none; }
+    .card-menu.open { display: grid; animation: pop .14s ease; }
+    @keyframes pop { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
     .card-menu button { border: 0; background: transparent; text-align: left; padding: 9px 12px; border-radius: 9px; font-size: 13px; font-weight: 600; cursor: pointer; }
     .card-menu button:hover { background: var(--pill); }
     .card-menu button.danger { color: #c8001e; }

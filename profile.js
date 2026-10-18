@@ -14,8 +14,11 @@
   let user = session();
   const gate = document.getElementById("profile-gate");
   const content = document.getElementById("profile-content");
-  if (!user) { gate.hidden = false; content.hidden = true; return; }
+  /* Mirror index.html: the blur/"Log in to view" overlay is gated on body.logged-in */
+  function syncAuthClass() { document.body.classList.toggle("logged-in", !!session()); }
+  if (!user) { gate.hidden = false; content.hidden = true; syncAuthClass(); return; }
   content.hidden = false;
+  syncAuthClass();
 
   /* --- Header --- */
   const profileOf = () => {
@@ -24,8 +27,9 @@
     if (!rec) { rec = { name: user.name || "", email: user.email, pass: "", created: Date.now() }; users.push(rec); writeUsers(users); }
     return rec;
   };
-  const myPosts = () => readPosts().filter((p) => p.owner === user.email).sort((a, b) => (b.created || 0) - (a.created || 0));
-  const savedKeys = () => (readSaved()[user.email] || []).map(String);
+  const myPosts = () => { const u = session() || user; return readPosts().filter((p) => p.owner === u.email).sort((a, b) => (b.created || 0) - (a.created || 0)); };
+  const savedKeys = () => { const u = session() || user; return (readSaved()[u.email] || []).map(String); };
+  function requireUser() { const u = session(); if (!u) { window.location.reload(); return null; } user = u; return u; }
 
   function renderHead() {
     const rec = profileOf();
@@ -47,6 +51,7 @@
 
   /* --- Tabs --- */
   function setTab(mine) {
+    closeAllMenus();
     const tm = document.getElementById("tab-mine"), ts = document.getElementById("tab-saved");
     tm.classList.toggle("on", mine); tm.setAttribute("aria-selected", mine);
     ts.classList.toggle("on", !mine); ts.setAttribute("aria-selected", !mine);
@@ -65,8 +70,8 @@
       <div class="pin-caption">
         <div class="caption-copy"><p class="pin-title">${esc(p.title)}</p><p class="creator">${esc(p.category)}</p></div>
         <div class="card-menu-wrap">
-          <button class="pin-more" data-menu="${esc(mid)}" aria-label="Options">•••</button>
-          <div class="card-menu" data-menubox="${esc(mid)}" hidden>${menu}</div>
+          <button class="pin-more" data-menu="${esc(mid)}" aria-label="Options" aria-haspopup="menu" aria-expanded="false">•••</button>
+          <div class="card-menu" role="menu" data-menubox="${esc(mid)}">${menu}</div>
         </div>
       </div>
     </article>`;
@@ -95,25 +100,33 @@
     document.getElementById("saved-grid").innerHTML = list.map((s, n) =>
       `<article class="pin">
         <div class="pin-image-wrap"><img class="pin-image" src="${esc(s.photo)}" alt="${esc(s.title)}" loading="lazy">
-        <button class="save-button saved" data-unsave="${esc(s.unsave)}">Saved</button></div>
+        <button class="save-button saved" data-unsave="${esc(s.unsave)}" aria-label="Unsave ${esc(s.title)}">Saved</button></div>
         <div class="pin-caption"><div class="caption-copy"><p class="pin-title">${esc(s.title)}</p><p class="creator">${esc(s.category)}</p></div>
-        <div class="card-menu-wrap"><button class="pin-more" data-menu="sv${n}" aria-label="Options">•••</button>
-        <div class="card-menu" data-menubox="sv${n}" hidden><button data-unsave="${esc(s.unsave)}">Remove</button></div></div></div>
+        <div class="card-menu-wrap"><button class="pin-more" data-menu="sv${n}" aria-label="Options" aria-haspopup="menu" aria-expanded="false">•••</button>
+        <div class="card-menu" role="menu" data-menubox="sv${n}"><button data-unsave="${esc(s.unsave)}">Remove</button></div></div></div>
       </article>`).join("");
     renderHead();
   }
   document.getElementById("tab-saved").addEventListener("click", () => setTab(false));
-  /* --- Card menus: edit / delete / unsave --- */
+  /* --- Card menus: hidden by default, toggle on •••, close on outside click --- */
+  function closeAllMenus(except) {
+    document.querySelectorAll(".card-menu.open").forEach((m) => { if (m !== except) m.classList.remove("open"); });
+  }
   function galleryClick(e) {
     const menuBtn = e.target.closest("[data-menu]");
     if (menuBtn) {
       e.stopPropagation();
-      const box = document.querySelector(`[data-menubox="${menuBtn.dataset.menu}"]`);
-      const wasHidden = box.hidden;
-      document.querySelectorAll(".card-menu").forEach((m) => { m.hidden = true; });
-      box.hidden = !wasHidden;
+      const wrap = menuBtn.closest(".card-menu-wrap");
+      const box = wrap && wrap.querySelector(".card-menu");
+      if (!box) return;
+      const willOpen = !box.classList.contains("open");
+      closeAllMenus(box);
+      box.classList.toggle("open", willOpen);
+      menuBtn.setAttribute("aria-expanded", willOpen);
       return;
     }
+    if (!requireUser()) return;
+    closeAllMenus();
     const ed = e.target.closest("[data-edit]");
     if (ed) { openPostModal(ed.dataset.edit); return; }
     const del = e.target.closest("[data-del]");
@@ -133,8 +146,9 @@
   document.getElementById("pane-mine").addEventListener("click", galleryClick);
   document.getElementById("pane-saved").addEventListener("click", galleryClick);
   document.addEventListener("click", (e) => {
-    if (!e.target.closest(".card-menu-wrap")) document.querySelectorAll(".card-menu").forEach((m) => { m.hidden = true; });
+    if (!e.target.closest(".card-menu-wrap")) closeAllMenus();
   });
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAllMenus(); });
 
   /* --- Post modal: create + edit, drag-and-drop upload --- */
   let draftPhoto = "", editingId = null;
@@ -204,6 +218,7 @@
   drop.addEventListener("drop", (e) => { const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (f) takeFile(f); });
   document.getElementById("post-form").addEventListener("submit", (e) => {
     e.preventDefault();
+    const me = requireUser(); if (!me) return;
     const err = document.getElementById("post-error");
     const fail = (m) => { err.textContent = m; err.hidden = false; };
     const title = document.getElementById("post-title").value.trim();
@@ -222,7 +237,7 @@
       Object.assign(p, data);
       toast("Post updated");
     } else {
-      posts.unshift({ id: uid(), owner: user.email, ownerName: profileOf().name || user.name, created: Date.now(), ...data });
+      posts.unshift({ id: uid(), owner: me.email, ownerName: profileOf().name || me.name, created: Date.now(), ...data });
       toast("Published — it is live on the home feed too");
     }
     if (!writePosts(posts)) return fail("That photo is too large to keep in this browser. Try a smaller one.");
@@ -249,6 +264,7 @@
   document.getElementById("edit-modal").addEventListener("click", (e) => { if (e.target.id === "edit-modal") closeEditModal(); });
   document.getElementById("edit-form").addEventListener("submit", (e) => {
     e.preventDefault();
+    const me = requireUser(); if (!me) return;
     const err = document.getElementById("edit-error");
     const fail = (m) => { err.textContent = m; err.hidden = false; };
     const name = document.getElementById("edit-name").value.trim();
@@ -256,18 +272,19 @@
     if (!name) return fail("Please enter a display name.");
     if (username && !/^[a-zA-Z0-9_]{3,24}$/.test(username)) return fail("Usernames use 3–24 letters, numbers or _.");
     const users = readUsers();
-    let rec = users.find((u) => u.email === user.email);
-    if (!rec) { rec = { email: user.email }; users.push(rec); }
+    let rec = users.find((u) => u.email === me.email);
+    if (!rec) { rec = { email: me.email }; users.push(rec); }
     rec.name = name; rec.username = username || "";
     rec.bio = document.getElementById("edit-bio").value.trim();
     writeUsers(users);
-    user = { ...user, name }; localStorage.setItem("modeboard_session", JSON.stringify(user));
+    user = { ...me, name }; localStorage.setItem("modeboard_session", JSON.stringify(user));
     closeEditModal(); renderHead(); toast("Profile updated");
   });
 
   /* --- Avatar upload (downscaled, stored on the user record) --- */
   document.getElementById("profile-avatar-file").addEventListener("change", (e) => {
     const file = e.target.files[0]; e.target.value = "";
+    if (!requireUser()) return;
     if (!file || !file.type.startsWith("image/")) { toast("Please choose an image file"); return; }
     downscale(file, (url) => {
       const users = readUsers();
@@ -277,8 +294,19 @@
     });
   });
 
-  /* --- Keep tabs fresh across pages --- */
+  /* --- Keep auth state + tabs fresh across pages --- */
+  function refreshAuth() {
+    const fresh = session();
+    if (!!fresh !== !!user || (fresh && user && fresh.email !== user.email)) {
+      /* Session gained, lost, or switched accounts: re-render the gate */
+      window.location.reload();
+      return;
+    }
+    if (fresh) user = fresh;
+    syncAuthClass();
+  }
   window.addEventListener("storage", (e) => {
+    if (e.key === "modeboard_session") { refreshAuth(); return; }
     if (e.key === "modeboard_saved") { renderHead(); if (!document.getElementById("pane-saved").hidden) renderSaved(); }
     if (e.key === "modeboard_posts") renderGrid();
   });
